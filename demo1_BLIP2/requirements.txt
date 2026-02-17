@@ -1,0 +1,16 @@
+# VisInject Demo - Pip 依赖
+# LLaVA-1.5 所需依赖
+
+# Transformers 和 HuggingFace 生态
+transformers>=4.37.0
+accelerate>=0.25.0
+
+# 模型相关
+einops>=0.7.0
+protobuf>=3.20.0
+sentencepiece>=0.1.99
+
+# 注意：
+# - torch, torchvision, numpy, scipy, pillow, matplotlib, scikit-image
+#   这些包应该已经通过 conda 安装，不要重复安装
+# - 如果直接使用 pip install -r requirements.txt，请先确保已激活 conda 环境
