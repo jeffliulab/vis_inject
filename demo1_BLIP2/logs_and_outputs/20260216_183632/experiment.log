@@ -1,0 +1,319 @@
+2026-02-16 18:36:32,539 [INFO] simple_demo - ================================================================================
+2026-02-16 18:36:32,539 [INFO] simple_demo - VisInject BLIP-2端到端对抗攻击实验
+2026-02-16 18:36:32,539 [INFO] simple_demo - 实验日期: 2026-02-16 18:36:32
+2026-02-16 18:36:32,539 [INFO] simple_demo - 运行目录: logs_and_outputs\20260216_183632
+2026-02-16 18:36:32,539 [INFO] simple_demo - ================================================================================
+2026-02-16 18:36:32,539 [INFO] simple_demo - 配置: 模型=Salesforce/blip2-opt-2.7b, 目标='chicken dinner'
+2026-02-16 18:36:32,539 [INFO] simple_demo - PGD: eps=0.1255, alpha=0.003922, iters=500
+2026-02-16 18:36:32,540 [INFO] model_loader - 加载BLIP-2模型: Salesforce/blip2-opt-2.7b
+2026-02-16 18:36:41,450 [INFO] model_loader - 已启用OPT gradient checkpointing
+2026-02-16 18:36:41,451 [INFO] model_loader - 模型显存占用: 7.0GB
+2026-02-16 18:36:41,451 [INFO] simple_demo - ============================================================
+2026-02-16 18:36:41,452 [INFO] simple_demo - 攻击方法: A_standard - 标准攻击(基线)
+2026-02-16 18:36:41,452 [INFO] simple_demo - 参数: eps=0.1255, alpha=0.003922, QAA=False
+2026-02-16 18:36:41,452 [INFO] simple_demo - ============================================================
+2026-02-16 18:36:41,452 [INFO] simple_demo - ================================================================================
+2026-02-16 18:36:41,452 [INFO] simple_demo - 测试图片: cat.png, 目标: 'chicken dinner'
+2026-02-16 18:36:41,544 [INFO] simple_demo - [Step1] shape=torch.Size([1, 3, 865, 1362]), range=[0.000,1.000]
+2026-02-16 18:36:41,544 [INFO] model_loader - [Generate] 图片: sample/cat.png
+2026-02-16 18:36:42,018 [INFO] model_loader - [Generate] 输出: 'a tabby cat sitting on a couch'
+2026-02-16 18:36:42,020 [INFO] simple_demo - [Step2] 原始输出: 'a tabby cat sitting on a couch'
+2026-02-16 18:36:42,020 [INFO] simple_demo - [Step3] 攻击, QAA=False, eps=0.1255, alpha=0.003922
+2026-02-16 18:36:42,020 [INFO] pgd_attack - [PGD] ========== 标准 PGD攻击 ==========
+2026-02-16 18:36:42,020 [INFO] pgd_attack - [PGD] 目标: 'chicken dinner'
+2026-02-16 18:36:42,020 [INFO] pgd_attack - [PGD] 量化感知: False
+2026-02-16 18:36:42,020 [INFO] pgd_attack - [PGD] 参数: eps=0.1255, alpha=0.0039, iters=500
+2026-02-16 18:36:42,121 [INFO] pgd_attack - [PGD-Step0] Loss=12.4688, Pred=' a is'
+2026-02-16 18:36:42,122 [INFO] pgd_attack - [PGD-Step0] Loss grad_fn: <NllLossBackward0 object at 0x000002EFC6B5AB60>
+2026-02-16 18:36:42,214 [INFO] pgd_attack - [PGD-Step0] 梯度范数: 110.2351
+2026-02-16 18:36:42,214 [INFO] pgd_attack - [PGD-Step0] ✓ 梯度非零
+2026-02-16 18:36:42,284 [INFO] pgd_attack - [PGD-Step1] Loss=9.9844, Pred='ick and'
+2026-02-16 18:36:42,600 [INFO] pgd_attack - [PGD-Step5] Loss=10.9375, Pred='ick on'
+2026-02-16 18:36:42,987 [INFO] pgd_attack - [PGD-Step10] Loss=8.4844, Pred='loe and'
+2026-02-16 18:36:44,176 [INFO] pgd_attack - [PGD-Step25] Loss=8.7344, Pred='ocolate in'
+2026-02-16 18:36:46,149 [INFO] pgd_attack - [PGD-Step50] Loss=5.8438, Pred='icken dinner'
+2026-02-16 18:36:50,305 [INFO] pgd_attack - [PGD-Step100] Loss=3.1465, Pred='icken dinner'
+2026-02-16 18:36:58,192 [INFO] pgd_attack - [PGD-Step200] Loss=1.4678, Pred='icken dinner'
+2026-02-16 18:37:06,338 [INFO] pgd_attack - [PGD-Step300] Loss=0.5000, Pred='chicken dinner'
+2026-02-16 18:37:14,416 [INFO] pgd_attack - [PGD-Step400] Loss=0.3120, Pred='chicken dinner'
+2026-02-16 18:37:22,595 [INFO] pgd_attack - [PGD-Step499] Loss=0.1261, Pred='chicken dinner'
+2026-02-16 18:37:22,636 [INFO] pgd_attack - [PGD] ========== 攻击完成 ==========
+2026-02-16 18:37:22,636 [INFO] pgd_attack - [PGD] Loss: 12.4688 → 0.0346
+2026-02-16 18:37:22,639 [INFO] pgd_attack - [PGD] 扰动: L_inf=0.1255
+2026-02-16 18:37:22,640 [INFO] simple_demo - [Step3] 完成, Loss: 12.4688 → 0.0346
+2026-02-16 18:37:22,640 [INFO] simple_demo - [Step4] 验证对抗样本
+2026-02-16 18:37:23,009 [INFO] model_loader - [保存] 8bit-PNG: logs_and_outputs\20260216_183632\temp\temp_adv.png
+2026-02-16 18:37:23,009 [INFO] model_loader - [保存] NPY: logs_and_outputs\20260216_183632\temp\temp_adv.npy
+2026-02-16 18:37:23,009 [INFO] model_loader - [保存] PT: logs_and_outputs\20260216_183632\temp\temp_adv.pt
+2026-02-16 18:37:24,121 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person,'
+2026-02-16 18:37:24,121 [INFO] model_loader - [验证-direct] 'chicken dinner, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person,'
+2026-02-16 18:37:24,121 [INFO] model_loader - [Generate] 图片: logs_and_outputs\20260216_183632\temp\temp_adv.png
+2026-02-16 18:37:25,250 [INFO] model_loader - [Generate] 输出: 'chicken dinner, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person,'
+2026-02-16 18:37:25,250 [INFO] model_loader - [验证-png8] 'chicken dinner, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person,'
+2026-02-16 18:37:26,384 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person,'
+2026-02-16 18:37:26,384 [INFO] model_loader - [验证-npy] 'chicken dinner, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person,'
+2026-02-16 18:37:27,505 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person,'
+2026-02-16 18:37:27,505 [INFO] model_loader - [验证-pt] 'chicken dinner, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person,'
+2026-02-16 18:37:27,506 [INFO] pgd_attack - [验证] 输出: 'chicken dinner, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person,'
+2026-02-16 18:37:27,506 [INFO] pgd_attack - [验证] 目标: 'chicken dinner'
+2026-02-16 18:37:27,506 [INFO] pgd_attack - [验证] 匹配: full=True, kw=2/2
+2026-02-16 18:37:27,506 [INFO] pgd_attack - [验证] 判定: 成功
+2026-02-16 18:37:29,077 [INFO] simple_demo - 实验结果 - cat.png:
+2026-02-16 18:37:29,078 [INFO] simple_demo -   原始: a tabby cat sitting on a couch
+2026-02-16 18:37:29,078 [INFO] simple_demo -   对抗: chicken dinner, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person,
+2026-02-16 18:37:29,078 [INFO] simple_demo -   目标: chicken dinner
+2026-02-16 18:37:29,078 [INFO] simple_demo -   成功: True, PSNR=22.92dB, SSIM=0.4118, 耗时=46.4s
+2026-02-16 18:37:29,088 [INFO] simple_demo - ============================================================
+2026-02-16 18:37:29,088 [INFO] simple_demo - 攻击方法: B_large_eps - 增大epsilon(64/255)
+2026-02-16 18:37:29,088 [INFO] simple_demo - 参数: eps=0.2510, alpha=0.007843, QAA=False
+2026-02-16 18:37:29,088 [INFO] simple_demo - ============================================================
+2026-02-16 18:37:29,088 [INFO] simple_demo - ================================================================================
+2026-02-16 18:37:29,089 [INFO] simple_demo - 测试图片: cat.png, 目标: 'chicken dinner'
+2026-02-16 18:37:29,116 [INFO] simple_demo - [Step1] shape=torch.Size([1, 3, 865, 1362]), range=[0.000,1.000]
+2026-02-16 18:37:29,116 [INFO] model_loader - [Generate] 图片: sample/cat.png
+2026-02-16 18:37:29,324 [INFO] model_loader - [Generate] 输出: 'a tabby cat sitting on a couch'
+2026-02-16 18:37:29,325 [INFO] simple_demo - [Step2] 原始输出: 'a tabby cat sitting on a couch'
+2026-02-16 18:37:29,325 [INFO] simple_demo - [Step3] 攻击, QAA=False, eps=0.2510, alpha=0.007843
+2026-02-16 18:37:29,325 [INFO] pgd_attack - [PGD] ========== 标准 PGD攻击 ==========
+2026-02-16 18:37:29,325 [INFO] pgd_attack - [PGD] 目标: 'chicken dinner'
+2026-02-16 18:37:29,325 [INFO] pgd_attack - [PGD] 量化感知: False
+2026-02-16 18:37:29,325 [INFO] pgd_attack - [PGD] 参数: eps=0.2510, alpha=0.0078, iters=500
+2026-02-16 18:37:29,386 [INFO] pgd_attack - [PGD-Step0] Loss=12.7734, Pred=' a is'
+2026-02-16 18:37:29,386 [INFO] pgd_attack - [PGD-Step0] Loss grad_fn: <NllLossBackward0 object at 0x000002EFC72A3F70>
+2026-02-16 18:37:29,427 [INFO] pgd_attack - [PGD-Step0] 梯度范数: 8.4135
+2026-02-16 18:37:29,427 [INFO] pgd_attack - [PGD-Step0] ✓ 梯度非零
+2026-02-16 18:37:29,487 [INFO] pgd_attack - [PGD-Step1] Loss=9.6016, Pred='ocolate and'
+2026-02-16 18:37:29,814 [INFO] pgd_attack - [PGD-Step5] Loss=8.7969, Pred='ocolate scratch'
+2026-02-16 18:37:30,226 [INFO] pgd_attack - [PGD-Step10] Loss=7.7227, Pred='ickenpox'
+2026-02-16 18:37:31,511 [INFO] pgd_attack - [PGD-Step25] Loss=5.4688, Pred='icken meal'
+2026-02-16 18:37:33,611 [INFO] pgd_attack - [PGD-Step50] Loss=4.0078, Pred='icken on'
+2026-02-16 18:37:37,702 [INFO] pgd_attack - [PGD-Step100] Loss=2.4746, Pred='icken dinner'
+2026-02-16 18:37:46,260 [INFO] pgd_attack - [PGD-Step200] Loss=0.2161, Pred='chicken dinner'
+2026-02-16 18:37:54,547 [INFO] pgd_attack - [PGD-Step300] Loss=0.0123, Pred='chicken dinner'
+2026-02-16 18:38:03,078 [INFO] pgd_attack - [PGD-Step400] Loss=0.0070, Pred='chicken dinner'
+2026-02-16 18:38:11,290 [INFO] pgd_attack - [PGD-Step499] Loss=0.0031, Pred='chicken dinner'
+2026-02-16 18:38:11,325 [INFO] pgd_attack - [PGD] ========== 攻击完成 ==========
+2026-02-16 18:38:11,325 [INFO] pgd_attack - [PGD] Loss: 12.7734 → 0.0016
+2026-02-16 18:38:11,325 [INFO] pgd_attack - [PGD] 扰动: L_inf=0.2510
+2026-02-16 18:38:11,326 [INFO] simple_demo - [Step3] 完成, Loss: 12.7734 → 0.0016
+2026-02-16 18:38:11,326 [INFO] simple_demo - [Step4] 验证对抗样本
+2026-02-16 18:38:11,448 [INFO] model_loader - [保存] 8bit-PNG: logs_and_outputs\20260216_183632\temp\temp_adv.png
+2026-02-16 18:38:11,448 [INFO] model_loader - [保存] NPY: logs_and_outputs\20260216_183632\temp\temp_adv.npy
+2026-02-16 18:38:11,448 [INFO] model_loader - [保存] PT: logs_and_outputs\20260216_183632\temp\temp_adv.pt
+2026-02-16 18:38:12,500 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's p'
+2026-02-16 18:38:12,500 [INFO] model_loader - [验证-direct] 'chicken dinner paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's p'
+2026-02-16 18:38:12,500 [INFO] model_loader - [Generate] 图片: logs_and_outputs\20260216_183632\temp\temp_adv.png
+2026-02-16 18:38:13,577 [INFO] model_loader - [Generate] 输出: 'chicken dinner paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's p'
+2026-02-16 18:38:13,577 [INFO] model_loader - [验证-png8] 'chicken dinner paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's p'
+2026-02-16 18:38:14,635 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's p'
+2026-02-16 18:38:14,635 [INFO] model_loader - [验证-npy] 'chicken dinner paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's p'
+2026-02-16 18:38:15,719 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's p'
+2026-02-16 18:38:15,719 [INFO] model_loader - [验证-pt] 'chicken dinner paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's p'
+2026-02-16 18:38:15,720 [INFO] pgd_attack - [验证] 输出: 'chicken dinner paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's p'
+2026-02-16 18:38:15,720 [INFO] pgd_attack - [验证] 目标: 'chicken dinner'
+2026-02-16 18:38:15,720 [INFO] pgd_attack - [验证] 匹配: full=True, kw=2/2
+2026-02-16 18:38:15,720 [INFO] pgd_attack - [验证] 判定: 成功
+2026-02-16 18:38:17,211 [INFO] simple_demo - 实验结果 - cat.png:
+2026-02-16 18:38:17,211 [INFO] simple_demo -   原始: a tabby cat sitting on a couch
+2026-02-16 18:38:17,211 [INFO] simple_demo -   对抗: chicken dinner paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's p
+2026-02-16 18:38:17,211 [INFO] simple_demo -   目标: chicken dinner
+2026-02-16 18:38:17,211 [INFO] simple_demo -   成功: True, PSNR=17.10dB, SSIM=0.1928, 耗时=46.9s
+2026-02-16 18:38:17,219 [INFO] simple_demo - ============================================================
+2026-02-16 18:38:17,219 [INFO] simple_demo - 攻击方法: C_qaa - QAA量化感知攻击
+2026-02-16 18:38:17,219 [INFO] simple_demo - 参数: eps=0.1255, alpha=0.003922, QAA=True
+2026-02-16 18:38:17,219 [INFO] simple_demo - ============================================================
+2026-02-16 18:38:17,219 [INFO] simple_demo - ================================================================================
+2026-02-16 18:38:17,219 [INFO] simple_demo - 测试图片: cat.png, 目标: 'chicken dinner'
+2026-02-16 18:38:17,249 [INFO] simple_demo - [Step1] shape=torch.Size([1, 3, 865, 1362]), range=[0.000,1.000]
+2026-02-16 18:38:17,250 [INFO] model_loader - [Generate] 图片: sample/cat.png
+2026-02-16 18:38:17,447 [INFO] model_loader - [Generate] 输出: 'a tabby cat sitting on a couch'
+2026-02-16 18:38:17,447 [INFO] simple_demo - [Step2] 原始输出: 'a tabby cat sitting on a couch'
+2026-02-16 18:38:17,447 [INFO] simple_demo - [Step3] 攻击, QAA=True, eps=0.1255, alpha=0.003922
+2026-02-16 18:38:17,447 [INFO] pgd_attack - [PGD] ========== QAA(量化感知) PGD攻击 ==========
+2026-02-16 18:38:17,447 [INFO] pgd_attack - [PGD] 目标: 'chicken dinner'
+2026-02-16 18:38:17,447 [INFO] pgd_attack - [PGD] 量化感知: True
+2026-02-16 18:38:17,447 [INFO] pgd_attack - [PGD] 参数: eps=0.1255, alpha=0.0039, iters=500
+2026-02-16 18:38:17,515 [INFO] pgd_attack - [PGD-Step0] Loss=12.8672, Pred=' a is'
+2026-02-16 18:38:17,515 [INFO] pgd_attack - [PGD-Step0] Loss grad_fn: <NllLossBackward0 object at 0x000002F47851BEB0>
+2026-02-16 18:38:17,550 [INFO] pgd_attack - [PGD-Step0] 梯度范数: 7.4111
+2026-02-16 18:38:17,550 [INFO] pgd_attack - [PGD-Step0] ✓ 梯度非零
+2026-02-16 18:38:17,616 [INFO] pgd_attack - [PGD-Step1] Loss=10.0703, Pred='ick and'
+2026-02-16 18:38:17,930 [INFO] pgd_attack - [PGD-Step5] Loss=9.3359, Pred='ick and'
+2026-02-16 18:38:18,376 [INFO] pgd_attack - [PGD-Step10] Loss=11.1094, Pred='ick on'
+2026-02-16 18:38:19,587 [INFO] pgd_attack - [PGD-Step25] Loss=8.4453, Pred='ocolate and'
+2026-02-16 18:38:21,563 [INFO] pgd_attack - [PGD-Step50] Loss=5.3164, Pred='icken dinner'
+2026-02-16 18:38:25,743 [INFO] pgd_attack - [PGD-Step100] Loss=1.0830, Pred='icken dinner'
+2026-02-16 18:38:35,318 [INFO] pgd_attack - [PGD-Step200] Loss=2.0527, Pred='icken dinner'
+2026-02-16 18:38:43,866 [INFO] pgd_attack - [PGD-Step300] Loss=0.0318, Pred='chicken dinner'
+2026-02-16 18:38:52,432 [INFO] pgd_attack - [PGD-Step400] Loss=0.0385, Pred='chicken dinner'
+2026-02-16 18:39:01,921 [INFO] pgd_attack - [PGD-Step499] Loss=0.0027, Pred='chicken dinner'
+2026-02-16 18:39:01,962 [INFO] pgd_attack - [PGD] ========== 攻击完成 ==========
+2026-02-16 18:39:01,962 [INFO] pgd_attack - [PGD] Loss: 12.8672 → 0.0027
+2026-02-16 18:39:01,962 [INFO] pgd_attack - [PGD] 扰动: L_inf=0.1255
+2026-02-16 18:39:01,963 [INFO] simple_demo - [Step3] 完成, Loss: 12.8672 → 0.0027
+2026-02-16 18:39:01,963 [INFO] simple_demo - [Step4] 验证对抗样本
+2026-02-16 18:39:02,105 [INFO] model_loader - [保存] 8bit-PNG: logs_and_outputs\20260216_183632\temp\temp_adv.png
+2026-02-16 18:39:02,105 [INFO] model_loader - [保存] NPY: logs_and_outputs\20260216_183632\temp\temp_adv.npy
+2026-02-16 18:39:02,105 [INFO] model_loader - [保存] PT: logs_and_outputs\20260216_183632\temp\temp_adv.pt
+2026-02-16 18:39:03,335 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterball'
+2026-02-16 18:39:03,335 [INFO] model_loader - [验证-direct] 'chicken dinner butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterball'
+2026-02-16 18:39:03,335 [INFO] model_loader - [Generate] 图片: logs_and_outputs\20260216_183632\temp\temp_adv.png
+2026-02-16 18:39:04,612 [INFO] model_loader - [Generate] 输出: 'chicken dinner butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterball'
+2026-02-16 18:39:04,612 [INFO] model_loader - [验证-png8] 'chicken dinner butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterball'
+2026-02-16 18:39:05,889 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterball'
+2026-02-16 18:39:05,889 [INFO] model_loader - [验证-npy] 'chicken dinner butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterball'
+2026-02-16 18:39:07,183 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterball'
+2026-02-16 18:39:07,183 [INFO] model_loader - [验证-pt] 'chicken dinner butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterball'
+2026-02-16 18:39:07,187 [INFO] pgd_attack - [验证] 输出: 'chicken dinner butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterball'
+2026-02-16 18:39:07,187 [INFO] pgd_attack - [验证] 目标: 'chicken dinner'
+2026-02-16 18:39:07,187 [INFO] pgd_attack - [验证] 匹配: full=True, kw=2/2
+2026-02-16 18:39:07,187 [INFO] pgd_attack - [验证] 判定: 成功
+2026-02-16 18:39:08,989 [INFO] simple_demo - 实验结果 - cat.png:
+2026-02-16 18:39:08,989 [INFO] simple_demo -   原始: a tabby cat sitting on a couch
+2026-02-16 18:39:08,989 [INFO] simple_demo -   对抗: chicken dinner butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterball
+2026-02-16 18:39:08,989 [INFO] simple_demo -   目标: chicken dinner
+2026-02-16 18:39:08,989 [INFO] simple_demo -   成功: True, PSNR=22.91dB, SSIM=0.4119, 耗时=50.3s
+2026-02-16 18:39:08,999 [INFO] simple_demo - ============================================================
+2026-02-16 18:39:08,999 [INFO] simple_demo - 攻击方法: D_qaa_large - QAA+增大epsilon
+2026-02-16 18:39:08,999 [INFO] simple_demo - 参数: eps=0.2510, alpha=0.007843, QAA=True
+2026-02-16 18:39:08,999 [INFO] simple_demo - ============================================================
+2026-02-16 18:39:08,999 [INFO] simple_demo - ================================================================================
+2026-02-16 18:39:08,999 [INFO] simple_demo - 测试图片: cat.png, 目标: 'chicken dinner'
+2026-02-16 18:39:09,045 [INFO] simple_demo - [Step1] shape=torch.Size([1, 3, 865, 1362]), range=[0.000,1.000]
+2026-02-16 18:39:09,046 [INFO] model_loader - [Generate] 图片: sample/cat.png
+2026-02-16 18:39:09,285 [INFO] model_loader - [Generate] 输出: 'a tabby cat sitting on a couch'
+2026-02-16 18:39:09,286 [INFO] simple_demo - [Step2] 原始输出: 'a tabby cat sitting on a couch'
+2026-02-16 18:39:09,286 [INFO] simple_demo - [Step3] 攻击, QAA=True, eps=0.2510, alpha=0.007843
+2026-02-16 18:39:09,286 [INFO] pgd_attack - [PGD] ========== QAA(量化感知) PGD攻击 ==========
+2026-02-16 18:39:09,286 [INFO] pgd_attack - [PGD] 目标: 'chicken dinner'
+2026-02-16 18:39:09,286 [INFO] pgd_attack - [PGD] 量化感知: True
+2026-02-16 18:39:09,286 [INFO] pgd_attack - [PGD] 参数: eps=0.2510, alpha=0.0078, iters=500
+2026-02-16 18:39:09,349 [INFO] pgd_attack - [PGD-Step0] Loss=13.1797, Pred=' a is'
+2026-02-16 18:39:09,349 [INFO] pgd_attack - [PGD-Step0] Loss grad_fn: <NllLossBackward0 object at 0x000002F257DC6FE0>
+2026-02-16 18:39:09,392 [INFO] pgd_attack - [PGD-Step0] 梯度范数: 8.8205
+2026-02-16 18:39:09,392 [INFO] pgd_attack - [PGD-Step0] ✓ 梯度非零
+2026-02-16 18:39:09,467 [INFO] pgd_attack - [PGD-Step1] Loss=11.5312, Pred=' a is'
+2026-02-16 18:39:09,835 [INFO] pgd_attack - [PGD-Step5] Loss=10.2656, Pred='ris cat'
+2026-02-16 18:39:10,276 [INFO] pgd_attack - [PGD-Step10] Loss=9.4297, Pred='aos cat'
+2026-02-16 18:39:11,703 [INFO] pgd_attack - [PGD-Step25] Loss=6.5586, Pred='icken dinner'
+2026-02-16 18:39:13,976 [INFO] pgd_attack - [PGD-Step50] Loss=4.6680, Pred='icken dinner'
+2026-02-16 18:39:18,965 [INFO] pgd_attack - [PGD-Step100] Loss=3.3555, Pred='inch co'
+2026-02-16 18:39:29,375 [INFO] pgd_attack - [PGD-Step200] Loss=0.1038, Pred='chicken dinner'
+2026-02-16 18:39:39,873 [INFO] pgd_attack - [PGD-Step300] Loss=0.0474, Pred='chicken dinner'
+2026-02-16 18:39:48,020 [INFO] pgd_attack - [PGD-Step400] Loss=0.0227, Pred='chicken dinner'
+2026-02-16 18:39:56,000 [INFO] pgd_attack - [PGD-Step499] Loss=0.0200, Pred='chicken dinner'
+2026-02-16 18:39:56,040 [INFO] pgd_attack - [PGD] ========== 攻击完成 ==========
+2026-02-16 18:39:56,040 [INFO] pgd_attack - [PGD] Loss: 13.1797 → 0.0103
+2026-02-16 18:39:56,040 [INFO] pgd_attack - [PGD] 扰动: L_inf=0.2510
+2026-02-16 18:39:56,041 [INFO] simple_demo - [Step3] 完成, Loss: 13.1797 → 0.0103
+2026-02-16 18:39:56,041 [INFO] simple_demo - [Step4] 验证对抗样本
+2026-02-16 18:39:56,168 [INFO] model_loader - [保存] 8bit-PNG: logs_and_outputs\20260216_183632\temp\temp_adv.png
+2026-02-16 18:39:56,168 [INFO] model_loader - [保存] NPY: logs_and_outputs\20260216_183632\temp\temp_adv.npy
+2026-02-16 18:39:56,168 [INFO] model_loader - [保存] PT: logs_and_outputs\20260216_183632\temp\temp_adv.pt
+2026-02-16 18:39:56,322 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner is a game of chicken?'
+2026-02-16 18:39:56,323 [INFO] model_loader - [验证-direct] 'chicken dinner is a game of chicken?'
+2026-02-16 18:39:56,323 [INFO] model_loader - [Generate] 图片: logs_and_outputs\20260216_183632\temp\temp_adv.png
+2026-02-16 18:39:56,504 [INFO] model_loader - [Generate] 输出: 'chicken dinner is a game of chicken?'
+2026-02-16 18:39:56,505 [INFO] model_loader - [验证-png8] 'chicken dinner is a game of chicken?'
+2026-02-16 18:39:56,667 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner is a game of chicken?'
+2026-02-16 18:39:56,667 [INFO] model_loader - [验证-npy] 'chicken dinner is a game of chicken?'
+2026-02-16 18:39:56,827 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner is a game of chicken?'
+2026-02-16 18:39:56,827 [INFO] model_loader - [验证-pt] 'chicken dinner is a game of chicken?'
+2026-02-16 18:39:56,827 [INFO] pgd_attack - [验证] 输出: 'chicken dinner is a game of chicken?'
+2026-02-16 18:39:56,827 [INFO] pgd_attack - [验证] 目标: 'chicken dinner'
+2026-02-16 18:39:56,827 [INFO] pgd_attack - [验证] 匹配: full=True, kw=2/2
+2026-02-16 18:39:56,827 [INFO] pgd_attack - [验证] 判定: 成功
+2026-02-16 18:39:58,384 [INFO] simple_demo - 实验结果 - cat.png:
+2026-02-16 18:39:58,384 [INFO] simple_demo -   原始: a tabby cat sitting on a couch
+2026-02-16 18:39:58,384 [INFO] simple_demo -   对抗: chicken dinner is a game of chicken?
+2026-02-16 18:39:58,384 [INFO] simple_demo -   目标: chicken dinner
+2026-02-16 18:39:58,384 [INFO] simple_demo -   成功: True, PSNR=17.12dB, SSIM=0.1932, 耗时=48.2s
+2026-02-16 18:39:58,393 [INFO] simple_demo - ============================================================
+2026-02-16 18:39:58,393 [INFO] simple_demo - 攻击方法: E_quant_train - 量化鲁棒性训练(STE)
+2026-02-16 18:39:58,393 [INFO] simple_demo - 参数: eps=0.1255, alpha=0.003922, QAA=ste
+2026-02-16 18:39:58,393 [INFO] simple_demo - ============================================================
+2026-02-16 18:39:58,393 [INFO] simple_demo - ================================================================================
+2026-02-16 18:39:58,393 [INFO] simple_demo - 测试图片: cat.png, 目标: 'chicken dinner'
+2026-02-16 18:39:58,426 [INFO] simple_demo - [Step1] shape=torch.Size([1, 3, 865, 1362]), range=[0.000,1.000]
+2026-02-16 18:39:58,427 [INFO] model_loader - [Generate] 图片: sample/cat.png
+2026-02-16 18:39:58,621 [INFO] model_loader - [Generate] 输出: 'a tabby cat sitting on a couch'
+2026-02-16 18:39:58,621 [INFO] simple_demo - [Step2] 原始输出: 'a tabby cat sitting on a couch'
+2026-02-16 18:39:58,622 [INFO] simple_demo - [Step3] 攻击, QAA=ste, eps=0.1255, alpha=0.003922
+2026-02-16 18:39:58,622 [INFO] pgd_attack - [PGD] ========== STE(量化鲁棒性训练) PGD攻击 ==========
+2026-02-16 18:39:58,622 [INFO] pgd_attack - [PGD] 目标: 'chicken dinner'
+2026-02-16 18:39:58,622 [INFO] pgd_attack - [PGD] 量化感知: ste
+2026-02-16 18:39:58,622 [INFO] pgd_attack - [PGD] 参数: eps=0.1255, alpha=0.0039, iters=500
+2026-02-16 18:39:58,676 [INFO] pgd_attack - [PGD-Step0] Loss=12.5781, Pred=' a is'
+2026-02-16 18:39:58,677 [INFO] pgd_attack - [PGD-Step0] Loss grad_fn: <NllLossBackward0 object at 0x000002F257DC7F40>
+2026-02-16 18:39:58,711 [INFO] pgd_attack - [PGD-Step0] 梯度范数: 12.2082
+2026-02-16 18:39:58,711 [INFO] pgd_attack - [PGD-Step0] ✓ 梯度非零
+2026-02-16 18:39:58,776 [INFO] pgd_attack - [PGD-Step1] Loss=10.4531, Pred='ick cat'
+2026-02-16 18:39:59,102 [INFO] pgd_attack - [PGD-Step5] Loss=8.9297, Pred='ick and'
+2026-02-16 18:39:59,517 [INFO] pgd_attack - [PGD-Step10] Loss=8.9375, Pred='ick and'
+2026-02-16 18:40:00,744 [INFO] pgd_attack - [PGD-Step25] Loss=8.4141, Pred='ick and'
+2026-02-16 18:40:02,871 [INFO] pgd_attack - [PGD-Step50] Loss=5.6641, Pred='ocolate n'
+2026-02-16 18:40:06,945 [INFO] pgd_attack - [PGD-Step100] Loss=2.5684, Pred='icken and'
+2026-02-16 18:40:15,606 [INFO] pgd_attack - [PGD-Step200] Loss=0.2944, Pred='chicken dinner'
+2026-02-16 18:40:24,112 [INFO] pgd_attack - [PGD-Step300] Loss=0.1165, Pred='chicken dinner'
+2026-02-16 18:40:33,831 [INFO] pgd_attack - [PGD-Step400] Loss=0.0235, Pred='chicken dinner'
+2026-02-16 18:40:43,333 [INFO] pgd_attack - [PGD-Step499] Loss=0.0047, Pred='chicken dinner'
+2026-02-16 18:40:43,388 [INFO] pgd_attack - [PGD] ========== 攻击完成 ==========
+2026-02-16 18:40:43,388 [INFO] pgd_attack - [PGD] Loss: 12.5781 → 0.0047
+2026-02-16 18:40:43,388 [INFO] pgd_attack - [PGD] 扰动: L_inf=0.1255
+2026-02-16 18:40:43,389 [INFO] simple_demo - [Step3] 完成, Loss: 12.5781 → 0.0047
+2026-02-16 18:40:43,389 [INFO] simple_demo - [Step4] 验证对抗样本
+2026-02-16 18:40:43,549 [INFO] model_loader - [保存] 8bit-PNG: logs_and_outputs\20260216_183632\temp\temp_adv.png
+2026-02-16 18:40:43,549 [INFO] model_loader - [保存] NPY: logs_and_outputs\20260216_183632\temp\temp_adv.npy
+2026-02-16 18:40:43,549 [INFO] model_loader - [保存] PT: logs_and_outputs\20260216_183632\temp\temp_adv.pt
+2026-02-16 18:40:43,685 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner with a cat'
+2026-02-16 18:40:43,685 [INFO] model_loader - [验证-direct] 'chicken dinner with a cat'
+2026-02-16 18:40:43,685 [INFO] model_loader - [Generate] 图片: logs_and_outputs\20260216_183632\temp\temp_adv.png
+2026-02-16 18:40:43,861 [INFO] model_loader - [Generate] 输出: 'chicken dinner with a cat'
+2026-02-16 18:40:43,861 [INFO] model_loader - [验证-png8] 'chicken dinner with a cat'
+2026-02-16 18:40:43,999 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner with a cat'
+2026-02-16 18:40:44,001 [INFO] model_loader - [验证-npy] 'chicken dinner with a cat'
+2026-02-16 18:40:44,153 [INFO] model_loader - [GenerateTensor] 输出: 'chicken dinner with a cat'
+2026-02-16 18:40:44,153 [INFO] model_loader - [验证-pt] 'chicken dinner with a cat'
+2026-02-16 18:40:44,154 [INFO] pgd_attack - [验证] 输出: 'chicken dinner with a cat'
+2026-02-16 18:40:44,154 [INFO] pgd_attack - [验证] 目标: 'chicken dinner'
+2026-02-16 18:40:44,154 [INFO] pgd_attack - [验证] 匹配: full=True, kw=2/2
+2026-02-16 18:40:44,154 [INFO] pgd_attack - [验证] 判定: 成功
+2026-02-16 18:40:46,002 [INFO] simple_demo - 实验结果 - cat.png:
+2026-02-16 18:40:46,002 [INFO] simple_demo -   原始: a tabby cat sitting on a couch
+2026-02-16 18:40:46,002 [INFO] simple_demo -   对抗: chicken dinner with a cat
+2026-02-16 18:40:46,002 [INFO] simple_demo -   目标: chicken dinner
+2026-02-16 18:40:46,002 [INFO] simple_demo -   成功: True, PSNR=22.88dB, SSIM=0.4107, 耗时=46.1s
+2026-02-16 18:40:46,013 [INFO] simple_demo - ================================================================================
+2026-02-16 18:40:46,013 [INFO] simple_demo - 对比实验结果
+2026-02-16 18:40:46,013 [INFO] simple_demo - ================================================================================
+2026-02-16 18:40:46,014 [INFO] simple_demo - 方法: A_standard (标准攻击(基线))
+2026-02-16 18:40:46,014 [INFO] simple_demo -   成功: True
+2026-02-16 18:40:46,014 [INFO] simple_demo -   原始: a tabby cat sitting on a couch
+2026-02-16 18:40:46,014 [INFO] simple_demo -   对抗: chicken dinner, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person,
+2026-02-16 18:40:46,014 [INFO] simple_demo -   PSNR: 22.92dB, SSIM: 0.4118
+2026-02-16 18:40:46,014 [INFO] simple_demo -   Loss: 12.4688 → 0.0346
+2026-02-16 18:40:46,014 [INFO] simple_demo - 方法: B_large_eps (增大epsilon(64/255))
+2026-02-16 18:40:46,014 [INFO] simple_demo -   成功: True
+2026-02-16 18:40:46,014 [INFO] simple_demo -   原始: a tabby cat sitting on a couch
+2026-02-16 18:40:46,014 [INFO] simple_demo -   对抗: chicken dinner paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's p
+2026-02-16 18:40:46,014 [INFO] simple_demo -   PSNR: 17.10dB, SSIM: 0.1928
+2026-02-16 18:40:46,014 [INFO] simple_demo -   Loss: 12.7734 → 0.0016
+2026-02-16 18:40:46,014 [INFO] simple_demo - 方法: C_qaa (QAA量化感知攻击)
+2026-02-16 18:40:46,014 [INFO] simple_demo -   成功: True
+2026-02-16 18:40:46,014 [INFO] simple_demo -   原始: a tabby cat sitting on a couch
+2026-02-16 18:40:46,014 [INFO] simple_demo -   对抗: chicken dinner butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterball
+2026-02-16 18:40:46,014 [INFO] simple_demo -   PSNR: 22.91dB, SSIM: 0.4119
+2026-02-16 18:40:46,014 [INFO] simple_demo -   Loss: 12.8672 → 0.0027
+2026-02-16 18:40:46,014 [INFO] simple_demo - 方法: D_qaa_large (QAA+增大epsilon)
+2026-02-16 18:40:46,014 [INFO] simple_demo -   成功: True
+2026-02-16 18:40:46,014 [INFO] simple_demo -   原始: a tabby cat sitting on a couch
+2026-02-16 18:40:46,014 [INFO] simple_demo -   对抗: chicken dinner is a game of chicken?
+2026-02-16 18:40:46,014 [INFO] simple_demo -   PSNR: 17.12dB, SSIM: 0.1932
+2026-02-16 18:40:46,014 [INFO] simple_demo -   Loss: 13.1797 → 0.0103
+2026-02-16 18:40:46,015 [INFO] simple_demo - 方法: E_quant_train (量化鲁棒性训练(STE))
+2026-02-16 18:40:46,015 [INFO] simple_demo -   成功: True
+2026-02-16 18:40:46,015 [INFO] simple_demo -   原始: a tabby cat sitting on a couch
+2026-02-16 18:40:46,015 [INFO] simple_demo -   对抗: chicken dinner with a cat
+2026-02-16 18:40:46,015 [INFO] simple_demo -   PSNR: 22.88dB, SSIM: 0.4107
+2026-02-16 18:40:46,015 [INFO] simple_demo -   Loss: 12.5781 → 0.0047
+2026-02-16 18:40:46,015 [INFO] simple_demo - 实验结束, 总计5个测试

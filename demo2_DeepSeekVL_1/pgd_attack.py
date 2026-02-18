@@ -206,7 +206,8 @@ def test_attack_success(model, adv_image, question, target_text, temp_dir="temp"
     keyword_hits = sum(1 for kw in keywords if kw.lower() in response_lower)
     keyword_ratio = keyword_hits / len(keywords) if keywords else 0
     
-    success = full_match or keyword_ratio >= 0.5
+    min_ratio = 1.0 if len(keywords) <= 2 else 0.5
+    success = full_match or keyword_ratio >= min_ratio
     
     logger.info(f"[验证] 输出: '{response}'")
     logger.info(f"[验证] 目标: '{target_text}'")

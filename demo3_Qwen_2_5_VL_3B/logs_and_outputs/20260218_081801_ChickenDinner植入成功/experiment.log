@@ -1,0 +1,76 @@
+2026-02-18 08:18:01,076 [INFO] model_loader - 加载 Qwen2.5-VL 模型: Qwen/Qwen2.5-VL-3B-Instruct (torch.bfloat16)
+2026-02-18 08:18:01,309 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:01,347 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-02-18 08:18:01,347 [WARNING] huggingface_hub.utils._http - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-02-18 08:18:01,365 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-VL-3B-Instruct/66285546d2b821cf421d4f5eb2576359d3770cd3/preprocessor_config.json "HTTP/1.1 200 OK"
+2026-02-18 08:18:01,394 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:01,430 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-02-18 08:18:01,436 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-VL-3B-Instruct/66285546d2b821cf421d4f5eb2576359d3770cd3/preprocessor_config.json "HTTP/1.1 200 OK"
+2026-02-18 08:18:01,475 [INFO] httpx - HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-VL-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:01,511 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:01,543 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/chat_template.json "HTTP/1.1 307 Temporary Redirect"
+2026-02-18 08:18:01,551 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-VL-3B-Instruct/66285546d2b821cf421d4f5eb2576359d3770cd3/chat_template.json "HTTP/1.1 200 OK"
+2026-02-18 08:18:01,602 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:01,640 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:01,669 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:01,704 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-02-18 08:18:01,713 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-VL-3B-Instruct/66285546d2b821cf421d4f5eb2576359d3770cd3/preprocessor_config.json "HTTP/1.1 200 OK"
+2026-02-18 08:18:01,756 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:01,786 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-02-18 08:18:01,798 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-VL-3B-Instruct/66285546d2b821cf421d4f5eb2576359d3770cd3/preprocessor_config.json "HTTP/1.1 200 OK"
+2026-02-18 08:18:01,830 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-02-18 08:18:01,834 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-VL-3B-Instruct/66285546d2b821cf421d4f5eb2576359d3770cd3/config.json "HTTP/1.1 200 OK"
+2026-02-18 08:18:01,874 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-02-18 08:18:01,880 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-VL-3B-Instruct/66285546d2b821cf421d4f5eb2576359d3770cd3/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-02-18 08:18:01,920 [INFO] httpx - HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-VL-3B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:01,958 [INFO] httpx - HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-VL-3B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-02-18 08:18:02,368 [INFO] httpx - HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-VL-3B-Instruct "HTTP/1.1 200 OK"
+2026-02-18 08:18:02,400 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:02,448 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:02,477 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-02-18 08:18:02,490 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-VL-3B-Instruct/66285546d2b821cf421d4f5eb2576359d3770cd3/preprocessor_config.json "HTTP/1.1 200 OK"
+2026-02-18 08:18:02,531 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:02,578 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/video_preprocessor_config.json "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:02,611 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-02-18 08:18:02,619 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-VL-3B-Instruct/66285546d2b821cf421d4f5eb2576359d3770cd3/preprocessor_config.json "HTTP/1.1 200 OK"
+2026-02-18 08:18:03,150 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-02-18 08:18:03,160 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-VL-3B-Instruct/66285546d2b821cf421d4f5eb2576359d3770cd3/config.json "HTTP/1.1 200 OK"
+2026-02-18 08:18:03,193 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+2026-02-18 08:18:03,243 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/model.safetensors.index.json "HTTP/1.1 307 Temporary Redirect"
+2026-02-18 08:18:03,253 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-VL-3B-Instruct/66285546d2b821cf421d4f5eb2576359d3770cd3/model.safetensors.index.json "HTTP/1.1 200 OK"
+2026-02-18 08:18:03,298 [INFO] httpx - HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-VL-3B-Instruct/revision/main "HTTP/1.1 200 OK"
+2026-02-18 08:18:03,674 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-02-18 08:18:03,682 [INFO] httpx - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-VL-3B-Instruct/66285546d2b821cf421d4f5eb2576359d3770cd3/generation_config.json "HTTP/1.1 200 OK"
+2026-02-18 08:18:06,743 [INFO] model_loader - 模型显存占用: 7.1GB
+2026-02-18 08:18:06,743 [INFO] simple_demo - ================================================================================
+2026-02-18 08:18:06,743 [INFO] simple_demo - 模式: Custom | 图片: kpop.png
+2026-02-18 08:18:06,743 [INFO] simple_demo - 目标: 'chicken dinner'
+2026-02-18 08:18:06,774 [INFO] pgd_attack - [PGD] ========== QAA(量化感知) PGD攻击 ==========
+2026-02-18 08:18:06,774 [INFO] pgd_attack - [PGD] 目标: 'chicken dinner'
+2026-02-18 08:18:06,774 [INFO] pgd_attack - [PGD] 量化感知: True
+2026-02-18 08:18:06,775 [INFO] pgd_attack - [PGD] 参数: eps=0.1255, alpha=0.0025, iters=500
+2026-02-18 08:18:07,244 [INFO] pgd_attack - [PGD-Step0] Loss=10.7376, Pred='Theoker'
+2026-02-18 08:18:07,244 [INFO] pgd_attack - [PGD-Step0] Loss grad_fn: <NllLossBackward0 object at 0x00000248DD7A6E60>
+2026-02-18 08:18:07,414 [INFO] pgd_attack - [PGD-Step0] 梯度范数: 22.7391
+2026-02-18 08:18:07,414 [INFO] pgd_attack - [PGD-Step0] ✓ 梯度非零
+2026-02-18 08:18:07,602 [INFO] pgd_attack - [PGD-Step1] Loss=10.4448, Pred='Theinese'
+2026-02-18 08:18:08,502 [INFO] pgd_attack - [PGD-Step5] Loss=9.3174, Pred='Theoker'
+2026-02-18 08:18:09,656 [INFO] pgd_attack - [PGD-Step10] Loss=8.5564, Pred='Theoker'
+2026-02-18 08:18:13,335 [INFO] pgd_attack - [PGD-Step25] Loss=6.2296, Pred='Theicken dinner'
+2026-02-18 08:18:19,060 [INFO] pgd_attack - [PGD-Step50] Loss=0.4705, Pred='chicken dinner'
+2026-02-18 08:18:30,100 [INFO] pgd_attack - [PGD-Step100] Loss=0.0652, Pred='chicken dinner'
+2026-02-18 08:18:52,022 [INFO] pgd_attack - [PGD-Step200] Loss=0.0000, Pred='chicken dinner'
+2026-02-18 08:19:14,166 [INFO] pgd_attack - [PGD-Step300] Loss=0.0000, Pred='chicken dinner'
+2026-02-18 08:19:37,521 [INFO] pgd_attack - [PGD-Step400] Loss=0.0000, Pred='chicken dinner'
+2026-02-18 08:20:01,665 [INFO] pgd_attack - [PGD-Step499] Loss=0.0000, Pred='chicken dinner'
+2026-02-18 08:20:01,772 [INFO] pgd_attack - [PGD] ========== 攻击完成 ==========
+2026-02-18 08:20:01,772 [INFO] pgd_attack - [PGD] Loss: 10.7376 → 0.0000
+2026-02-18 08:20:01,772 [INFO] pgd_attack - [PGD] 扰动: L_inf=0.1255
+2026-02-18 08:20:01,801 [INFO] model_loader - [保存] PNG: logs_and_outputs\20260218_081801\temp\temp_adv.png
+2026-02-18 08:20:02,174 [INFO] model_loader - [验证-direct] 'chicken dinner bus tycoon'
+2026-02-18 08:20:02,574 [INFO] model_loader - [验证-png] 'chicken dinner bus tycoon'
+2026-02-18 08:20:02,574 [INFO] pgd_attack - [验证] 输出: 'chicken dinner bus tycoon'
+2026-02-18 08:20:02,574 [INFO] pgd_attack - [验证] 目标: 'chicken dinner'
+2026-02-18 08:20:02,574 [INFO] pgd_attack - [验证] 匹配: full=True, kw=2/2
+2026-02-18 08:20:02,574 [INFO] pgd_attack - [验证] 判定: 成功
+2026-02-18 08:20:02,599 [INFO] simple_demo - [保存] 对抗图像 → logs_and_outputs\20260218_081801\adversarial\adv_Custom_kpop.png

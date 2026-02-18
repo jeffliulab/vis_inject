@@ -1,0 +1,19 @@
+[
+  {
+    "image_name": "cat.png",
+    "original_output": "a tabby cat sitting on a couch",
+    "adversarial_output": "chicken dinner with a cat",
+    "target_text": "chicken dinner",
+    "psnr": 22.891074702051284,
+    "ssim": 0.41132445977321036,
+    "attack_success": true,
+    "time_cost": 43.388636112213135,
+    "loss_start": 12.75,
+    "loss_best": 0.061737060546875,
+    "parameters": {
+      "epsilon": 0.12549019607843137,
+      "alpha": 0.00392156862745098,
+      "iterations": 500
+    }
+  }
+]

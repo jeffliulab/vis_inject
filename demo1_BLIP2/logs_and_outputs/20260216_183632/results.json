@@ -1,0 +1,97 @@
+[
+  {
+    "image_name": "cat.png",
+    "original_output": "a tabby cat sitting on a couch",
+    "adversarial_output": "chicken dinner, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person, person,",
+    "target_text": "chicken dinner",
+    "psnr": 22.915845488578306,
+    "ssim": 0.41183576016471996,
+    "attack_success": true,
+    "time_cost": 46.37822961807251,
+    "loss_start": 12.46875,
+    "loss_best": 0.034576416015625,
+    "parameters": {
+      "epsilon": 0.12549019607843137,
+      "alpha": 0.00392156862745098,
+      "iterations": 500
+    },
+    "mode": "A_standard",
+    "mode_desc": "标准攻击(基线)"
+  },
+  {
+    "image_name": "cat.png",
+    "original_output": "a tabby cat sitting on a couch",
+    "adversarial_output": "chicken dinner paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's paula's p",
+    "target_text": "chicken dinner",
+    "psnr": 17.099750354547425,
+    "ssim": 0.19275184981035454,
+    "attack_success": true,
+    "time_cost": 46.94610071182251,
+    "loss_start": 12.7734375,
+    "loss_best": 0.0016489028930664062,
+    "parameters": {
+      "epsilon": 0.12549019607843137,
+      "alpha": 0.00392156862745098,
+      "iterations": 500
+    },
+    "mode": "B_large_eps",
+    "mode_desc": "增大epsilon(64/255)"
+  },
+  {
+    "image_name": "cat.png",
+    "original_output": "a tabby cat sitting on a couch",
+    "adversarial_output": "chicken dinner butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterballer butterball",
+    "target_text": "chicken dinner",
+    "psnr": 22.912898683046606,
+    "ssim": 0.411930330574007,
+    "attack_success": true,
+    "time_cost": 50.33593821525574,
+    "loss_start": 12.8671875,
+    "loss_best": 0.0026760101318359375,
+    "parameters": {
+      "epsilon": 0.12549019607843137,
+      "alpha": 0.00392156862745098,
+      "iterations": 500
+    },
+    "mode": "C_qaa",
+    "mode_desc": "QAA量化感知攻击"
+  },
+  {
+    "image_name": "cat.png",
+    "original_output": "a tabby cat sitting on a couch",
+    "adversarial_output": "chicken dinner is a game of chicken?",
+    "target_text": "chicken dinner",
+    "psnr": 17.118446152580248,
+    "ssim": 0.19321897105991037,
+    "attack_success": true,
+    "time_cost": 48.15266156196594,
+    "loss_start": 13.1796875,
+    "loss_best": 0.01026153564453125,
+    "parameters": {
+      "epsilon": 0.12549019607843137,
+      "alpha": 0.00392156862745098,
+      "iterations": 500
+    },
+    "mode": "D_qaa_large",
+    "mode_desc": "QAA+增大epsilon"
+  },
+  {
+    "image_name": "cat.png",
+    "original_output": "a tabby cat sitting on a couch",
+    "adversarial_output": "chicken dinner with a cat",
+    "target_text": "chicken dinner",
+    "psnr": 22.879710424415293,
+    "ssim": 0.41074809174388366,
+    "attack_success": true,
+    "time_cost": 46.145334005355835,
+    "loss_start": 12.578125,
+    "loss_best": 0.004711151123046875,
+    "parameters": {
+      "epsilon": 0.12549019607843137,
+      "alpha": 0.00392156862745098,
+      "iterations": 500
+    },
+    "mode": "E_quant_train",
+    "mode_desc": "量化鲁棒性训练(STE)"
+  }
+]

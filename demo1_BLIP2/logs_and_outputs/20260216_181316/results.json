@@ -1,0 +1,97 @@
+[
+  {
+    "image_name": "cat.png",
+    "original_output": "a tabby cat sitting on a couch",
+    "adversarial_output": "chicken dinner for cats",
+    "target_text": "chicken dinner",
+    "psnr": 22.866006225554933,
+    "ssim": 0.41012501635594917,
+    "attack_success": true,
+    "time_cost": 42.92686438560486,
+    "loss_start": 12.84375,
+    "loss_best": 0.01523590087890625,
+    "parameters": {
+      "epsilon": 0.12549019607843137,
+      "alpha": 0.00392156862745098,
+      "iterations": 500
+    },
+    "mode": "A_standard",
+    "mode_desc": "标准攻击(基线)"
+  },
+  {
+    "image_name": "cat.png",
+    "original_output": "a tabby cat sitting on a couch",
+    "adversarial_output": "chicken dinner cat food",
+    "target_text": "chicken dinner",
+    "psnr": 17.075927768590066,
+    "ssim": 0.19214334251350362,
+    "attack_success": true,
+    "time_cost": 42.00924491882324,
+    "loss_start": 13.015625,
+    "loss_best": 0.00856781005859375,
+    "parameters": {
+      "epsilon": 0.12549019607843137,
+      "alpha": 0.00392156862745098,
+      "iterations": 500
+    },
+    "mode": "B_large_eps",
+    "mode_desc": "增大epsilon(64/255)"
+  },
+  {
+    "image_name": "cat.png",
+    "original_output": "a tabby cat sitting on a couch",
+    "adversarial_output": "chicken dinner dinner with the cat - stock photo - images - 5",
+    "target_text": "chicken dinner",
+    "psnr": 22.87025802209594,
+    "ssim": 0.4105160356472037,
+    "attack_success": true,
+    "time_cost": 42.03821015357971,
+    "loss_start": 12.875,
+    "loss_best": 0.01385498046875,
+    "parameters": {
+      "epsilon": 0.12549019607843137,
+      "alpha": 0.00392156862745098,
+      "iterations": 500
+    },
+    "mode": "C_qaa",
+    "mode_desc": "QAA量化感知攻击"
+  },
+  {
+    "image_name": "cat.png",
+    "original_output": "a tabby cat sitting on a couch",
+    "adversarial_output": "chicken dinner, a cat is peeking out from behind a blanket",
+    "target_text": "chicken dinner",
+    "psnr": 17.12206140500089,
+    "ssim": 0.19358642086645225,
+    "attack_success": true,
+    "time_cost": 42.25980734825134,
+    "loss_start": 13.15625,
+    "loss_best": 0.05596923828125,
+    "parameters": {
+      "epsilon": 0.12549019607843137,
+      "alpha": 0.00392156862745098,
+      "iterations": 500
+    },
+    "mode": "D_qaa_large",
+    "mode_desc": "QAA+增大epsilon"
+  },
+  {
+    "image_name": "cat.png",
+    "original_output": "a tabby cat sitting on a couch",
+    "adversarial_output": "chicken dinner for cats - stock image",
+    "target_text": "chicken dinner",
+    "psnr": 22.89773154509772,
+    "ssim": 0.4111900999433624,
+    "attack_success": true,
+    "time_cost": 42.38397717475891,
+    "loss_start": 12.875,
+    "loss_best": 0.0031490325927734375,
+    "parameters": {
+      "epsilon": 0.12549019607843137,
+      "alpha": 0.00392156862745098,
+      "iterations": 500
+    },
+    "mode": "E_quant_train",
+    "mode_desc": "量化鲁棒性训练(STE)"
+  }
+]

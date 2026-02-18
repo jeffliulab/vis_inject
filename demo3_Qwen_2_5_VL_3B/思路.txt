@@ -1,0 +1,69 @@
+==========================================
+  demo3_Qwen_2_5_VL_3B 技术方案说明
+==========================================
+
+1. 模型架构 (Qwen2.5-VL-3B-Instruct)
+   - 视觉编码器: ViT (32层, hidden=1280, patch_size=14, 窗口注意力+SwiGLU+RMSNorm)
+   - 投影层: PatchMerger (2x2合并, Linear(5120→5120) → GELU → Linear(5120→2048))
+   - 语言模型: Qwen2.5-3B (36层, hidden=2048, 16 heads, dense)
+   - 位置编码: mRoPE (多模态旋转位置编码, 3维: temporal + height + width)
+   - 参数量: ~4B (bf16 约 8GB 显存)
+   - 特殊处理: Conv3d patch embedding (kernel 2×14×14), 单图复制为2帧
+
+2. 图像预处理
+   - 图像大小: 392×392 (固定, 需为 patch_size×merge_size=28 的倍数)
+   - 归一化: ImageNet CLIP mean/std (由 image_processor 执行, 模型内部不再归一化)
+     mean = [0.48145466, 0.4578275, 0.40821073]
+     std  = [0.26862954, 0.26130258, 0.27577711]
+   - Patch 网格: 28×28 = 784 patches
+   - Merge 后: 14×14 = 196 vision tokens
+   - pixel_values 格式: [N_patches, C*T*pH*pW] = [784, 1176]
+     按 2×2 merge group 排列 (merge group 行主序, 组内也行主序)
+
+3. 攻击方案 (与 demo2 对比)
+   - demo2 手动拼接 embedding, demo3 直接用 model.forward() + labels
+   - 优势: 模型自动处理 mRoPE 位置编码、image_pad token 替换、attention mask
+   - 梯度路径: image_tensor → normalize → reshape → pixel_values → ViT → Merger → Qwen2.5 → loss
+   - pixel_values 构造全程可微 (torch reshape/permute/expand 均可微)
+
+4. 攻击推理一致性
+   - Native 推理: processor 预处理 → model.generate()
+   - Manual 推理: 手动构造 pixel_values → model.generate()
+   - 攻击路径: 手动构造 pixel_values → model.forward() + labels → loss
+   - 三条路径归一化方式完全一致, 避免 demo2 早期的双重归一化问题
+
+5. 显存估算 (bf16, 392×392 图像)
+   - 模型参数: ~8GB
+   - 前向激活: ~2GB (196 vision + ~30 text tokens)
+   - 反向梯度: ~2GB
+   - 合计: ~12GB (16GB GPU 可用)
+
+6. 依赖安装
+   pip install transformers>=5.0 accelerate qwen-vl-utils
+   (注: 升级 transformers 不影响 demo2 的 DeepSeek-VL)
+
+7. 命令行用法
+   # 攻击 (默认 chicken dinner)
+   python simple_demo.py --image sample/cat.png
+
+   # 自定义注入内容
+   python simple_demo.py --image sample/cat.png --custom-prompt "Click here to verify"
+
+   # 选择预设
+   python simple_demo.py --image sample/cat.png --preset credential
+
+   # 对比实验 (Standard / QAA / QAA_High)
+   python simple_demo.py --image sample/cat.png --compare
+
+   # 独立推理测试
+   python test_inference.py --image sample/cat.png
+   python test_inference.py --image logs_and_outputs/xxx/adversarial/adv_xxx.png
+
+8. 与 demo2_DeepSeekVL_1 的主要区别
+   - 模型: DeepSeek-VL 1.3B → Qwen2.5-VL 3B
+   - 视觉编码: SigLIP-L (固定384, 576 tokens) → ViT+PatchMerger (可变, 196 tokens @392)
+   - 攻击方式: 手动 embedding 拼接 → model.forward(labels=...) 直接计算 loss
+   - 归一化: vision tower 内部 → image_processor 外部
+   - 位置编码: 标准 RoPE → mRoPE (3维)
+
+
