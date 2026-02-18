@@ -1,0 +1,53 @@
+demo2: DeepSeek-VL 1.3B (deepseek-ai/deepseek-vl-1.3b-chat) 端到端对抗攻击
+
+架构: SigLIP-L (视觉编码) + MLP Aligner (投影) + LLaMA-1.3B (语言模型)
+总参数: ~2B (密集模型，非 MoE)
+图像输入: 固定 384x384 (SigLIP-L ViT-L-16, patch_size=16, 576 patches)
+归一化: (x - 0.5) / 0.5 → [-1, 1]
+
+梯度路径 (端到端):
+  image [1,3,384,384]
+  → SigLIP-L (24层 ViT, 1024-dim) → [1, 576, 1024]
+  → MLP Aligner (Linear→GELU→Linear, 1024→2048) → [1, 576, 2048]
+  → 拼入 LLaMA embedding 序列
+  → LLaMA-1.3B (24层, 2048-dim, 标准 MHA) → loss
+
+vs DeepSeek-OCR 的区别:
+  - 密集模型 (非 MoE)，标准 MHA (非 MLA)
+  - 无 torch.no_grad() 阻断，梯度传播自然
+  - 通用 VLM (能描述图片、视觉问答)，非 OCR 专用
+  - VRAM ~6-8GB (PGD), 远小于 OCR 的 ~11-12GB
+
+环境依赖:
+  pip install git+https://github.com/deepseek-ai/DeepSeek-VL.git
+  (自动安装 attrdict, einops, timm, sentencepiece 等)
+
+---------------------------------------------------------
+simple_demo.py 用法
+
+# 默认攻击 (QAA模式, eps=32/255)
+python simple_demo.py --image sample/cat.png
+
+# 自定义注入文本
+python simple_demo.py --image sample/cat.png --custom-prompt "chicken dinner"
+
+# 自定义提问
+python simple_demo.py --image sample/cat.png --question "What do you see?"
+
+# 对比实验 (对比三种：Standard, QAA, QAA_High)
+python simple_demo.py --image sample/cat.png --compare
+
+---------------------------------------------------------
+test_inference.py 用法
+
+# 两种推理方式对比
+python test_inference.py --image sample/cat.png
+
+# 测试对抗样本
+python test_inference.py --image logs_and_outputs/xxx/adversarial/adv_xxx.png
+
+# 只用原生推理
+python test_inference.py --image sample/cat.png --mode native
+
+# 只用手动 embedding 推理
+python test_inference.py --image sample/cat.png --mode manual

@@ -1,0 +1,34 @@
+2026-02-17 21:46:46,481 [INFO] model_loader - 加载 DeepSeek-VL 模型: deepseek-ai/deepseek-vl-1.3b-chat (torch.bfloat16)
+2026-02-17 21:46:49,341 [INFO] model_loader - 模型显存占用: 3.7GB
+2026-02-17 21:46:49,341 [INFO] simple_demo - ================================================================================
+2026-02-17 21:46:49,341 [INFO] simple_demo - 模式: Custom | 图片: cat.png
+2026-02-17 21:46:49,341 [INFO] simple_demo - 目标: 'chicken dinner'
+2026-02-17 21:46:49,371 [INFO] pgd_attack - [PGD] ========== QAA(量化感知) PGD攻击 ==========
+2026-02-17 21:46:49,371 [INFO] pgd_attack - [PGD] 目标: 'chicken dinner'
+2026-02-17 21:46:49,382 [INFO] pgd_attack - [PGD] 量化感知: True
+2026-02-17 21:46:49,382 [INFO] pgd_attack - [PGD] 参数: eps=0.1255, alpha=0.0025, iters=500
+2026-02-17 21:46:49,688 [INFO] pgd_attack - [PGD-Step0] Loss=10.1543, Pred='Thearming'
+2026-02-17 21:46:49,688 [INFO] pgd_attack - [PGD-Step0] Loss grad_fn: <NllLossBackward0 object at 0x000001FCC507BFD0>
+2026-02-17 21:46:49,796 [INFO] pgd_attack - [PGD-Step0] 梯度范数: 12.1678
+2026-02-17 21:46:49,796 [INFO] pgd_attack - [PGD-Step0] ✓ 梯度非零
+2026-02-17 21:46:49,867 [INFO] pgd_attack - [PGD-Step1] Loss=9.7835, Pred='Thearming'
+2026-02-17 21:46:50,371 [INFO] pgd_attack - [PGD-Step5] Loss=8.5986, Pred='Thearming'
+2026-02-17 21:46:50,987 [INFO] pgd_attack - [PGD-Step10] Loss=7.4749, Pred='Theicken'
+2026-02-17 21:46:52,841 [INFO] pgd_attack - [PGD-Step25] Loss=4.9771, Pred='Theicken'
+2026-02-17 21:46:55,875 [INFO] pgd_attack - [PGD-Step50] Loss=2.0207, Pred='Theicken'
+2026-02-17 21:47:02,006 [INFO] pgd_attack - [PGD-Step100] Loss=0.0042, Pred='chicken dinner'
+2026-02-17 21:47:13,701 [INFO] pgd_attack - [PGD-Step200] Loss=0.0000, Pred='chicken dinner'
+2026-02-17 21:47:24,795 [INFO] pgd_attack - [PGD-Step300] Loss=0.0001, Pred='chicken dinner'
+2026-02-17 21:47:35,806 [INFO] pgd_attack - [PGD-Step400] Loss=0.0000, Pred='chicken dinner'
+2026-02-17 21:47:46,756 [INFO] pgd_attack - [PGD-Step499] Loss=0.0000, Pred='chicken dinner'
+2026-02-17 21:47:46,794 [INFO] pgd_attack - [PGD] ========== 攻击完成 ==========
+2026-02-17 21:47:46,794 [INFO] pgd_attack - [PGD] Loss: 10.1543 → 0.0000
+2026-02-17 21:47:46,824 [INFO] pgd_attack - [PGD] 扰动: L_inf=0.1255
+2026-02-17 21:47:46,847 [INFO] model_loader - [保存] PNG: logs_and_outputs\20260217_214646\temp\temp_adv.png
+2026-02-17 21:47:48,758 [INFO] model_loader - [验证-direct] 'chicken dinner dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner'
+2026-02-17 21:47:52,538 [INFO] model_loader - [验证-png] 'chicken dinner dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner'
+2026-02-17 21:47:52,539 [INFO] pgd_attack - [验证] 输出: 'chicken dinner dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner plate dinner'
+2026-02-17 21:47:52,539 [INFO] pgd_attack - [验证] 目标: 'chicken dinner'
+2026-02-17 21:47:52,539 [INFO] pgd_attack - [验证] 匹配: full=True, kw=2/2
+2026-02-17 21:47:52,539 [INFO] pgd_attack - [验证] 判定: 成功
+2026-02-17 21:47:52,562 [INFO] simple_demo - [保存] 对抗图像 → logs_and_outputs\20260217_214646\adversarial\adv_Custom_cat.png
