@@ -2,8 +2,10 @@
 # VisInject 项目 .gitignore
 # ============================================================
 
+# 特别的ignore
 data
 test
+hpc_train_with_hf_env.sh
 
 # ---- Python 字节码 ----
 __pycache__/

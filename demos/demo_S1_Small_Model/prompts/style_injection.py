@@ -16,13 +16,13 @@ class HarryPotterStylePrompt(BasePromptTarget):
 
     @property
     def target_text(self) -> str:
-        return "请用哈利波特魔法世界的口吻和风格描述这张图片，使用魔法相关词汇。"
+        return "Describe this image in the style and tone of the Harry Potter universe, using magic-related vocabulary."
 
     @property
     def style_keywords(self) -> list:
         return self.cfg.get(
             "style_keywords",
-            ["魔法", "霍格沃茨", "麻瓜", "咒语", "魔杖", "巫师", "魔药", "禁林"]
+            ["magic", "Hogwarts", "muggle", "spell", "wand", "wizard", "potion", "Forbidden Forest"]
         )
 
     @property
