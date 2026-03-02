@@ -54,6 +54,7 @@ cd "${DEMO_DIR}"
 
 ############################
 # Run
+# max-shards: maximum dataset support, delete this row if dataset is complete 
 ############################
 case "${MODE}" in
     pretrain)
@@ -62,7 +63,8 @@ case "${MODE}" in
             ${PYTHON} pretrain.py \
                 --tar-dir "${LAION_DIR}" \
                 --batch-size 600 \
-                --epochs 5
+                --epochs 5 \
+                --max-shards 120
         ;;
     finetune)
         echo "[MODE] Fine-tuning on COCO"

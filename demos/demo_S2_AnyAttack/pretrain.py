@@ -54,7 +54,8 @@ def main(args):
         start_epoch = ckpt.get("epoch", 0)
         print(f"Resumed from epoch {start_epoch}, step {global_step}")
 
-    train_loader = make_laion_dataloader(args.tar_dir, args.batch_size)
+    train_loader = make_laion_dataloader(args.tar_dir, args.batch_size,
+                                         max_shards=args.max_shards)
 
     os.makedirs(args.checkpoint_dir, exist_ok=True)
 
@@ -138,6 +139,8 @@ if __name__ == "__main__":
     parser.add_argument("--epochs", type=int, default=cfg["epochs"])
     parser.add_argument("--chunk", type=int, default=cfg["chunk"])
     parser.add_argument("--eps", type=float, default=ATTACK_CONFIG["eps"])
+    parser.add_argument("--max-shards", type=int, default=None,
+                        help="Only use the first N tar shards (default: all)")
     parser.add_argument("--checkpoint", type=str, default=None)
     parser.add_argument("--checkpoint-dir", type=str, default=cfg["checkpoint_dir"])
     parser.add_argument("--checkpoint-every", type=int, default=cfg["checkpoint_every"])

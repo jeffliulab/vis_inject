@@ -43,7 +43,8 @@ EVAL_TRANSFORM = transforms.Compose([
 # ── LAION-Art WebDataset (pre-training) ──────────────────────────
 
 def make_laion_dataloader(tar_dir: str, batch_size: int,
-                          num_workers: int = 8) -> "wds.WebLoader":
+                          num_workers: int = 8,
+                          max_shards: int = None) -> "wds.WebLoader":
     """
     Create a streaming DataLoader from LAION-Art WebDataset tar files.
 
@@ -51,6 +52,8 @@ def make_laion_dataloader(tar_dir: str, batch_size: int,
         tar_dir: Directory containing .tar shard files.
         batch_size: Per-GPU batch size.
         num_workers: DataLoader workers.
+        max_shards: If set, only use the first N tar shards (useful when
+                    the dataset is still downloading).
 
     Returns:
         WebLoader yielding (images_tensor, text_list) batches.
@@ -60,6 +63,10 @@ def make_laion_dataloader(tar_dir: str, batch_size: int,
                           "Install with: pip install webdataset")
 
     tar_files = sorted(glob.glob(os.path.join(tar_dir, "*.tar")))
+    total_shards = len(tar_files)
+    if max_shards is not None:
+        tar_files = tar_files[:max_shards]
+    print(f"Using {len(tar_files)} / {total_shards} shards")
     if not tar_files:
         raise FileNotFoundError(f"No .tar files found in {tar_dir}")
 
@@ -68,9 +75,10 @@ def make_laion_dataloader(tar_dir: str, batch_size: int,
         return TRAIN_TRANSFORM(image), text
 
     dataset = (
-        wds.WebDataset(tar_files, resampled=True, shardshuffle=True)
+        wds.WebDataset(tar_files, resampled=True, shardshuffle=True,
+                       handler=wds.warn_and_continue)
         .shuffle(5000)
-        .decode("pil")
+        .decode("pil", handler=wds.warn_and_continue)
         .to_tuple("jpg;png;webp", "txt")
         .map(handle_sample)
         .batched(batch_size)
