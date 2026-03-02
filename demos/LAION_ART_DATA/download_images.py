@@ -508,9 +508,41 @@ class ProgressTracker:
 # Data loading
 # ---------------------------------------------------------------------------
 
+def _resolve_hf_token(token_arg: Optional[str],
+                      logger: logging.Logger) -> Optional[str]:
+    """
+    Resolve HuggingFace token from (in priority order):
+      1. --hf-token CLI argument
+      2. HF_TOKEN environment variable
+      3. huggingface-cli saved token (~/.cache/huggingface/token)
+    Returns the token string or None.
+    """
+    if token_arg:
+        logger.info("HF token: provided via --hf-token argument")
+        return token_arg
+
+    env_token = os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")
+    if env_token:
+        logger.info("HF token: found in environment variable")
+        return env_token
+
+    token_file = Path.home() / ".cache" / "huggingface" / "token"
+    if token_file.exists():
+        token = token_file.read_text().strip()
+        if token:
+            logger.info(f"HF token: loaded from {token_file}")
+            return token
+
+    logger.warning("HF token: NOT FOUND. Gated datasets will return 401.")
+    logger.warning("  Fix: run 'huggingface-cli login' on the login node, or")
+    logger.warning("  set HF_TOKEN env var, or pass --hf-token <token>")
+    return None
+
+
 def download_parquet(parquet_url: str, parquet_path: str,
-                     logger: logging.Logger) -> str:
-    """Download parquet metadata if not present."""
+                     logger: logging.Logger,
+                     hf_token: Optional[str] = None) -> str:
+    """Download parquet metadata if not present, with HF auth support."""
     path = Path(parquet_path)
     if path.exists() and path.stat().st_size > 100_000_000:
         logger.info(f"Parquet exists: {path} ({path.stat().st_size / 1e6:.0f} MB)")
@@ -520,12 +552,48 @@ def download_parquet(parquet_url: str, parquet_path: str,
     path.parent.mkdir(parents=True, exist_ok=True)
 
     try:
-        import urllib.request
-        urllib.request.urlretrieve(parquet_url, str(path))
+        headers = {
+            "User-Agent": "Mozilla/5.0 (compatible; LAION-Art-Downloader/1.0)"
+        }
+        if hf_token:
+            headers["Authorization"] = f"Bearer {hf_token}"
+            logger.debug("  Using HF token for authentication")
+
+        req = Request(parquet_url, headers=headers)
+        with urlopen(req, timeout=120) as resp:
+            with open(str(path), "wb") as f:
+                while True:
+                    chunk = resp.read(8 * 1024 * 1024)  # 8MB chunks
+                    if not chunk:
+                        break
+                    f.write(chunk)
+
         logger.info(f"Parquet saved: {path} ({path.stat().st_size / 1e6:.0f} MB)")
+    except HTTPError as e:
+        logger.error(f"Parquet download FAILED: HTTP {e.code}")
+        logger.error(traceback.format_exc())
+        if e.code == 401:
+            logger.error("")
+            logger.error("=" * 50)
+            logger.error("  401 Unauthorized -- HuggingFace token required!")
+            logger.error("")
+            logger.error("  LAION-Art is a gated dataset. To fix this:")
+            logger.error("  1. Go to https://huggingface.co/datasets/laion/laion-art")
+            logger.error("     and accept the dataset terms")
+            logger.error("  2. Create a token at https://huggingface.co/settings/tokens")
+            logger.error("  3. Then do ONE of the following:")
+            logger.error("     a) On HPC login node: huggingface-cli login")
+            logger.error("     b) Set env var: export HF_TOKEN=hf_xxx...")
+            logger.error("     c) Pass argument: --hf-token hf_xxx...")
+            logger.error("=" * 50)
+        if path.exists():
+            path.unlink()
+        raise
     except Exception as e:
         logger.error(f"Parquet download FAILED: {type(e).__name__}: {e}")
         logger.error(traceback.format_exc())
+        if path.exists():
+            path.unlink()
         raise
 
     return str(path)
@@ -599,10 +667,13 @@ def main(args):
     log_system_info(logger, args.output_dir)
     log_config(logger, args)
 
+    # Resolve HuggingFace token
+    hf_token = _resolve_hf_token(args.hf_token, logger)
+
     # Download parquet metadata
     try:
         parquet_path = download_parquet(args.parquet_url, args.parquet_path,
-                                        logger)
+                                        logger, hf_token=hf_token)
     except Exception:
         logger.critical("Cannot proceed without parquet metadata. Exiting.")
         sys.exit(1)
@@ -805,6 +876,11 @@ if __name__ == "__main__":
         default="https://huggingface.co/datasets/laion/laion-art/resolve/main/laion-art.parquet")
     parser.add_argument("--parquet-path", type=str,
         default="/cluster/tufts/c26sp1ee0141/pliu07/LAION_ART/metadata/laion-art.parquet")
+
+    # HuggingFace authentication (needed for gated datasets like LAION-Art)
+    parser.add_argument("--hf-token", type=str, default=None,
+        help="HuggingFace access token. Also reads from HF_TOKEN env var "
+             "or ~/.cache/huggingface/token (via huggingface-cli login)")
 
     # Output
     parser.add_argument("--output-dir", type=str,

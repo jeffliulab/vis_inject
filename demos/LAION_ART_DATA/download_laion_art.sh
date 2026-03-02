@@ -31,6 +31,21 @@ DOWNLOADER="${SCRIPT_DIR}/download_images.py"
 # Select mode: test | full | resume
 MODE="${1:-full}"
 
+# HuggingFace token: auto-detect from huggingface-cli login cache,
+# or override with HF_TOKEN env var before running sbatch.
+# Example: export HF_TOKEN=hf_xxxxx && sbatch download_laion_art.sh test
+HF_TOKEN_ARGS=""
+if [ -n "${HF_TOKEN:-}" ]; then
+    HF_TOKEN_ARGS="--hf-token ${HF_TOKEN}"
+    echo "[INFO] HF_TOKEN set via environment variable"
+elif [ -f "${HOME}/.cache/huggingface/token" ]; then
+    echo "[INFO] HF token found at ~/.cache/huggingface/token"
+else
+    echo "[WARN] No HuggingFace token detected."
+    echo "       If LAION-Art requires auth, run on login node first:"
+    echo "         pip install huggingface_hub && huggingface-cli login"
+fi
+
 ############################
 # Modules
 ############################
@@ -79,7 +94,8 @@ case "${MODE}" in
                 --test-run \
                 --test-count 100 \
                 --workers 8 \
-                --output-dir "${DATA_DIR}/webdataset_test"
+                --output-dir "${DATA_DIR}/webdataset_test" \
+                ${HF_TOKEN_ARGS}
         echo ""
         echo "[INFO] Test images saved to: ${DATA_DIR}/webdataset_test"
         echo "[INFO] If this worked, run: sbatch download_laion_art.sh full"
@@ -93,7 +109,8 @@ case "${MODE}" in
         srun -n 1 -c ${SLURM_CPUS_PER_TASK:-16} \
             ${PYTHON} "${DOWNLOADER}" \
                 --workers 32 \
-                --output-dir "${DATA_DIR}/webdataset"
+                --output-dir "${DATA_DIR}/webdataset" \
+                ${HF_TOKEN_ARGS}
         ;;
     resume)
         echo ""
@@ -102,7 +119,8 @@ case "${MODE}" in
             ${PYTHON} "${DOWNLOADER}" \
                 --resume \
                 --workers 32 \
-                --output-dir "${DATA_DIR}/webdataset"
+                --output-dir "${DATA_DIR}/webdataset" \
+                ${HF_TOKEN_ARGS}
         ;;
     *)
         echo "[ERROR] Unknown mode: ${MODE}"
