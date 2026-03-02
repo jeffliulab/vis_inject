@@ -22,8 +22,10 @@ PYTHON="${ENV_DIR}/bin/python"
 DATA_DIR="/cluster/tufts/c26sp1ee0141/pliu07/LAION_ART"
 LOG_DIR="${DATA_DIR}/logs"
 
-# Script location (adjust if you copy files to HPC separately)
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# SLURM copies the .sh to a temp spool dir on the compute node,
+# so BASH_SOURCE points there instead of the original location.
+# $SLURM_SUBMIT_DIR is the directory where sbatch was invoked.
+SCRIPT_DIR="${SLURM_SUBMIT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 DOWNLOADER="${SCRIPT_DIR}/download_images.py"
 
 # Select mode: test | full | resume
