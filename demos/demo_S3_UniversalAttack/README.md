@@ -43,6 +43,9 @@ No neural network is trained -- the method directly optimizes the pixels of one 
 
 The adversarial image z is parameterized as:
 
+$$z = \text{clamp}(z_0 + \gamma \cdot \tanh(z_1) + \varepsilon, \; 0, \; 1)$$
+
+
 $$z = \text{clip}(z_0 + g(z_1) + \epsilon, \ 0, \ 1)$$
 
 where:
@@ -55,6 +58,9 @@ where:
 ### Loss Function
 
 Masked cross-entropy loss on target answer tokens only:
+
+$$\min_{z_1} \; \mathcal{L} = -\sum_{t \in \text{target}} \log P(y_t \mid y_{<t}, \; q, \; z)$$
+
 
 $$\mathcal{L}_{LLM}(y | x, z) = -\sum_{t \in \text{target}} \log P(y_t | y_{<t}, x, z)$$
 

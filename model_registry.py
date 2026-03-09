@@ -11,6 +11,34 @@ VisInject 统一模型注册表
   默认写入本文件同级的 model_cache/ 目录（已 gitignored）。
   若用户已在系统环境中设置了 HF_HOME（如 D:\\hugging_face），
   init_model_env() 使用 setdefault，不会覆盖已有设置。
+
+Quick Reference (注册键速查表)
+──────────────────────────────────────────────────────────────────
+  Registry Key              │ Model Name              │ VRAM  │ S3 Wrapper       │ Family
+  ─────────────────────────┼─────────────────────────┼───────┼──────────────────┼────────
+  qwen2_5_vl_3b            │ Qwen2.5-VL-3B           │  6 GB │ QwenWrapper      │ qwen
+  qwen2_vl_2b              │ Qwen2-VL-2B             │  4 GB │ QwenWrapper      │ qwen
+  qwen2_5_vl_7b            │ Qwen2.5-VL-7B           │ 14 GB │ QwenWrapper      │ qwen
+  blip2_opt_2_7b           │ BLIP-2-OPT-2.7B         │  5 GB │ Blip2Wrapper     │ blip2
+  blip2_flan_t5_xl         │ BLIP-2-FlanT5-XL        │  8 GB │ Blip2Wrapper     │ blip2
+  instructblip_vicuna_7b   │ InstructBLIP-Vicuna-7B   │ 14 GB │ Blip2Wrapper     │ blip2
+  deepseek_vl_1_3b         │ DeepSeek-VL-1.3B         │  4 GB │ DeepSeekWrapper  │ deepseek
+  deepseek_vl2_tiny        │ DeepSeek-VL2-Tiny        │  3 GB │ DeepSeekWrapper  │ deepseek
+  llava_1_5_7b             │ LLaVA-1.5-7B             │ 14 GB │ LlavaWrapper     │ llava
+  phi_3_5_vision           │ Phi-3.5-Vision           │  8 GB │ PhiWrapper       │ phi
+  llama_3_2_11b_vision     │ Llama-3.2-11B-Vision     │ 22 GB │ LlamaVisionWrapper│ llama
+  clip_vit_l14             │ CLIP-ViT-L/14            │  1 GB │ N/A (encoder)    │ clip
+  clip_vit_b32             │ CLIP-ViT-B/32            │ <1 GB │ N/A (encoder)    │ clip
+  minigpt4_vicuna_7b       │ MiniGPT-4-Vicuna-7B      │ 14 GB │ N/A (未实现)      │ minigpt4
+  ─────────────────────────┴─────────────────────────┴───────┴──────────────────┴────────
+
+  demo_S3 用法示例:
+    python demo.py --target-models qwen2_5_vl_3b              # 单模型 (~6 GB)
+    python attack.py --target-models qwen2_vl_2b blip2_opt_2_7b  # 多模型 (~9 GB, 显存累加)
+
+quick view model summary:
+python -c "from model_registry import print_registry_summary; print_registry_summary()"
+
 """
 
 import os

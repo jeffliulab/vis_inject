@@ -12,6 +12,7 @@ This directory contains all experimental demos for the VisInject project, progre
 | [Demo3](#demo3-qwen25-vl-pgd) | Qwen2.5-VL-3B | End-to-end CE + PGD | Completed |
 | [Demo_S1](#demo_s1-stegoencoder) | Multi-VLM | U-Net generative encoder | Abandoned |
 | [Demo_S2](#demo_s2-anyattack) | Cross-model (CLIP proxy) | Self-supervised Decoder | In Progress |
+| [Demo_S2P](#demo_s2p-anyattack-official-weights) | Cross-model (CLIP proxy) | Official pre-trained Decoder | Ready |
 | [Demo_S3](#demo_s3-universalattack) | Qwen / multi-model | Direct pixel optimization | Code Complete |
 
 ## Research Progression
@@ -230,6 +231,28 @@ sbatch hpc_train.sh finetune
 # Generate adversarial image
 python demo.py --decoder-path checkpoints/finetuned.pt \
                --clean-image dog.jpg --target-image cat.jpg
+```
+
+---
+
+## Demo_S2P: AnyAttack Official Weights
+
+**Directory**: [`demo_S2P/`](demo_S2P/) | **Status**: Ready
+
+Inference-only demo using AnyAttack's **official pre-trained weights** from HuggingFace (pre-trained on LAION-400M + fine-tuned on COCO). No training required -- runs on a local GPU (RTX 4090).
+
+Uses the same Decoder architecture as Demo_S2, but with the authors' fully trained `coco_bi.pt` checkpoint. Evaluates adversarial transferability against BLIP-2, DeepSeek-VL, and Qwen2.5-VL.
+
+### Quick Start
+
+```bash
+cd demo_S2P
+python download_weights.py
+python demo.py --clean-image ../demo_images/ORIGIN_dog.png \
+               --target-image ../demo_images/ORIGIN_cat.png
+python evaluate.py --adv-image outputs/adversarial.png \
+                   --clean-image ../demo_images/ORIGIN_dog.png \
+                   --target-image ../demo_images/ORIGIN_cat.png
 ```
 
 ---

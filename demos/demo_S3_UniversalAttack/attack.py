@@ -29,7 +29,16 @@ import torchvision
 sys.path.insert(0, os.path.dirname(__file__))
 from config import ATTACK_CONFIG, OUTPUT_CONFIG
 from dataset import AttackDataset
-from models.qwen_wrapper import QwenWrapper
+
+
+FAMILY_WRAPPER_MAP = {
+    "qwen":     ("models.qwen_wrapper",    "QwenWrapper"),
+    "blip2":    ("models.blip2_wrapper",   "Blip2Wrapper"),
+    "deepseek": ("models.deepseek_wrapper", "DeepSeekWrapper"),
+    "llava":    ("models.llava_wrapper",   "LlavaWrapper"),
+    "phi":      ("models.phi_wrapper",     "PhiWrapper"),
+    "llama":    ("models.llama_wrapper",   "LlamaVisionWrapper"),
+}
 
 
 def get_wrapper_for_model(model_key: str, device: torch.device):
@@ -39,14 +48,20 @@ def get_wrapper_for_model(model_key: str, device: torch.device):
     info = get_model_info(model_key)
     family = info["family"]
 
-    if family in ("qwen",):
-        wrapper = QwenWrapper(model_key, device)
-    else:
+    if family not in FAMILY_WRAPPER_MAP:
+        available = list(FAMILY_WRAPPER_MAP.keys())
         raise NotImplementedError(
             f"No wrapper for family '{family}'. "
-            f"Implement a wrapper in models/ and register it here."
+            f"Available families: {available}. "
+            f"Implement a wrapper in models/ and add it to FAMILY_WRAPPER_MAP."
         )
 
+    module_path, class_name = FAMILY_WRAPPER_MAP[family]
+    import importlib
+    mod = importlib.import_module(module_path)
+    WrapperCls = getattr(mod, class_name)
+
+    wrapper = WrapperCls(model_key, device)
     wrapper.load()
     return wrapper
 

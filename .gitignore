@@ -6,6 +6,10 @@
 data
 test
 hpc_train_with_hf_env.sh
+自用说明书.txt
+架构复习_.md 
+预训练复习_.md
+demos_presentation
 
 # ---- Python 字节码 ----
 __pycache__/
