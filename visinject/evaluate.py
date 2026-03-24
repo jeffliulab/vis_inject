@@ -163,7 +163,11 @@ def evaluate_captions(
     """Generate VLM captions for each image variant."""
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "demos", "demo_S2P"))
 
-    from transformers import AutoModelForVision2Seq, AutoProcessor
+    try:
+        from transformers import AutoModelForVision2Seq, AutoProcessor
+    except ImportError:
+        print("  [WARN] AutoModelForVision2Seq not available, skipping captions")
+        return {"error": "transformers version too old for AutoModelForVision2Seq"}
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
     from model_registry import get_model_info
 
