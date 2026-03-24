@@ -264,6 +264,8 @@ def main():
 
     # Evaluation
     parser.add_argument("--evaluate", action="store_true", help="Run evaluation after generation")
+    parser.add_argument("--eval-vlms", nargs="+", default=None,
+                        help="VLMs to evaluate against (default: from config)")
 
     # General
     parser.add_argument("--output-dir", type=str, default=out_cfg["base_dir"])
@@ -319,6 +321,7 @@ def main():
             target_phrase=args.target_phrase,
             output_dir=os.path.join(args.output_dir, "results"),
             device=device,
+            eval_vlms=args.eval_vlms,
         )
 
     print(f"\n{'=' * 60}")
