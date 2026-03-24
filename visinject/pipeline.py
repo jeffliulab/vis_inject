@@ -60,8 +60,8 @@ get_wrapper_for_model = _attack_mod.get_wrapper_for_model
 apply_gaussian_blur = _attack_mod.apply_gaussian_blur
 compute_quantization_sigma = _attack_mod.compute_quantization_sigma
 AttackDataset = _dataset_mod.AttackDataset
-# Restore original sys.path and modules
-sys.path[:] = _saved_path
+# Restore saved modules but keep _demo_s3_dir in sys.path — it's needed
+# at runtime when get_wrapper_for_model() calls importlib.import_module("models.xxx")
 sys.modules.update(_saved_modules)
 
 
