@@ -27,12 +27,12 @@ PROMPT_TAGS=(
 
 # --- Model configs ---
 MODELS_2="qwen2_5_vl_3b blip2_opt_2_7b"
-MODELS_4="qwen2_5_vl_3b blip2_opt_2_7b deepseek_vl_1_3b llava_1_5_7b"
-MODELS_5="qwen2_5_vl_3b blip2_opt_2_7b deepseek_vl_1_3b llava_1_5_7b phi_3_5_vision"
+MODELS_3="qwen2_5_vl_3b blip2_opt_2_7b deepseek_vl_1_3b"
+MODELS_4="qwen2_5_vl_3b blip2_opt_2_7b deepseek_vl_1_3b phi_3_5_vision"
 
-MODEL_CONFIGS=("$MODELS_2" "$MODELS_4" "$MODELS_5")
-MODEL_TAGS=("2m" "4m" "5m")
-MODEL_MEMS=("32G" "80G" "96G")
+MODEL_CONFIGS=("$MODELS_2" "$MODELS_3" "$MODELS_4")
+MODEL_TAGS=("2m" "3m" "4m")
+MODEL_MEMS=("32G" "48G" "64G")
 MODEL_TIMES=("02:00:00" "04:00:00" "06:00:00")
 
 echo "===== VisInject Comparative Experiments ====="
