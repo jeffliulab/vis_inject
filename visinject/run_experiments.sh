@@ -32,7 +32,7 @@ MODELS_5="qwen2_5_vl_3b blip2_opt_2_7b deepseek_vl_1_3b llava_1_5_7b phi_3_5_vis
 
 MODEL_CONFIGS=("$MODELS_2" "$MODELS_4" "$MODELS_5")
 MODEL_TAGS=("2m" "4m" "5m")
-MODEL_MEMS=("32G" "48G" "64G")
+MODEL_MEMS=("32G" "80G" "96G")
 MODEL_TIMES=("02:00:00" "04:00:00" "06:00:00")
 
 echo "===== VisInject Comparative Experiments ====="
