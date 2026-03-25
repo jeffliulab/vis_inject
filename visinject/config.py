@@ -112,6 +112,21 @@ EVAL_CONFIG = {
     "num_safe_questions": 10,
 }
 
+# ── LLM-as-Judge: API-based evaluation ─────────────────────────────
+# Response pairs are generated on HPC, then judged locally via API.
+# Usage: python judge.py --pairs-file response_pairs.json
+
+JUDGE_CONFIG = {
+    "judges": [
+        {"name": "gpt-4o", "provider": "openai", "model": "gpt-4o"},
+        {"name": "claude-sonnet", "provider": "anthropic", "model": "claude-sonnet-4-6"},
+        {"name": "gpt-4o-mini", "provider": "openai", "model": "gpt-4o-mini"},
+    ],
+    "temperature": 0.0,
+    "max_tokens": 300,
+    "min_valid_judges": 2,
+}
+
 # ── Output paths ──────────────────────────────────────────────────
 
 OUTPUT_CONFIG = {

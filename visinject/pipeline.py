@@ -263,7 +263,9 @@ def main():
                         help="Skip UniversalAttack, use this universal image directly")
 
     # Evaluation
-    parser.add_argument("--evaluate", action="store_true", help="Run evaluation after generation")
+    parser.add_argument("--evaluate", action="store_true", help="Run legacy ASR evaluation")
+    parser.add_argument("--generate-pairs", action="store_true",
+                        help="Generate response pairs (clean vs adv) for LLM-as-judge evaluation")
     parser.add_argument("--eval-vlms", nargs="+", default=None,
                         help="VLMs to evaluate against (default: from config)")
 
@@ -310,9 +312,28 @@ def main():
         device=device,
     )
 
-    # ── Step 3: Evaluation (optional) ──
+    # ── Step 3: Generate response pairs for LLM-as-judge (optional) ──
+    if args.generate_pairs:
+        print(f"\n[Step 3] Generating response pairs for LLM-as-judge...")
+        from evaluate import generate_response_pairs
+        eval_vlms = args.eval_vlms or args.target_models
+        results_dir = os.path.join(args.output_dir, "results")
+        os.makedirs(results_dir, exist_ok=True)
+        for adv_path, clean_path in zip(adv_paths, args.clean_images):
+            name = os.path.splitext(os.path.basename(clean_path))[0]
+            pairs_path = os.path.join(results_dir, f"response_pairs_{name}.json")
+            generate_response_pairs(
+                adv_image_path=adv_path,
+                clean_image_path=clean_path,
+                target_phrase=args.target_phrase,
+                target_vlms=eval_vlms,
+                device=device,
+                output_path=pairs_path,
+            )
+
+    # ── Step 3b: Legacy ASR evaluation (optional) ──
     if args.evaluate:
-        print(f"\n[Step 3] Running evaluation...")
+        print(f"\n[Step 3b] Running legacy ASR evaluation...")
         from evaluate import run_evaluation
         run_evaluation(
             adv_paths=adv_paths,
@@ -328,8 +349,10 @@ def main():
     print(f"VisInject pipeline complete!")
     print(f"  Universal image: {universal_path}")
     print(f"  Adversarial images: {adv_paths}")
+    if args.generate_pairs:
+        print(f"  Response pairs: {os.path.join(args.output_dir, 'results', 'response_pairs_*.json')}")
     if args.evaluate:
-        print(f"  Results: {os.path.join(args.output_dir, 'results')}")
+        print(f"  Legacy results: {os.path.join(args.output_dir, 'results')}")
 
 
 if __name__ == "__main__":

@@ -54,6 +54,86 @@ sys.path[:] = _saved_path
 sys.modules.update(_saved_modules)
 
 
+def generate_response_pairs(
+    adv_image_path: str,
+    clean_image_path: str,
+    target_phrase: str,
+    target_vlms: list[str],
+    num_adversarial: int = 20,
+    num_safe: int = 10,
+    device: torch.device = None,
+    output_path: str = None,
+) -> dict:
+    """
+    Generate (clean_response, adv_response) pairs for each VLM x question.
+
+    This runs on HPC (needs GPU + models). The output JSON can then be
+    evaluated offline by judge.py using LLM API calls.
+    """
+    import datetime
+    from torchvision import transforms
+
+    if device is None:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    dataset = AttackDataset()
+    test_questions = (
+        [(q, True) for q in dataset.adversarial[:num_adversarial]]
+        + [(q, False) for q in dataset.safe[:num_safe]]
+    )
+
+    result = {
+        "metadata": {
+            "target_phrase": target_phrase,
+            "clean_image": os.path.basename(clean_image_path),
+            "adv_image": os.path.basename(adv_image_path),
+            "generated_at": datetime.datetime.now().isoformat(),
+            "num_adversarial": num_adversarial,
+            "num_safe": num_safe,
+        },
+        "pairs": {},
+    }
+
+    transform = transforms.Compose([
+        transforms.Resize((448, 448)),
+        transforms.ToTensor(),
+    ])
+
+    clean_tensor = transform(Image.open(clean_image_path).convert("RGB")).unsqueeze(0).to(device)
+    adv_tensor = transform(Image.open(adv_image_path).convert("RGB")).unsqueeze(0).to(device)
+
+    for model_key in target_vlms:
+        print(f"\n  [{model_key}] Generating response pairs...")
+        wrapper = get_wrapper_for_model(model_key, device)
+
+        pairs = []
+        for question, is_adv in test_questions:
+            response_clean = wrapper.generate(clean_tensor, question, max_new_tokens=200)
+            response_adv = wrapper.generate(adv_tensor, question, max_new_tokens=200)
+
+            pairs.append({
+                "question": question,
+                "is_adversarial": is_adv,
+                "response_clean": response_clean,
+                "response_adv": response_adv,
+            })
+
+            tag = "ADV" if is_adv else "SAFE"
+            changed = response_clean.strip() != response_adv.strip()
+            print(f"    [{tag}][{'DIFF' if changed else 'SAME'}] {question[:50]}...")
+
+        result["pairs"][model_key] = pairs
+        wrapper.unload()
+
+    if output_path:
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(result, f, indent=2, ensure_ascii=False)
+        print(f"\n  Response pairs saved to: {output_path}")
+
+    return result
+
+
 def evaluate_asr(
     adv_image_path: str,
     target_phrase: str,
