@@ -38,9 +38,9 @@ PROJECT_ROOT = os.path.dirname(
 )
 sys.path.insert(0, PROJECT_ROOT)
 
-from config import ANYATTACK_CONFIG  # noqa: E402
+from src.config import ANYATTACK_CONFIG  # noqa: E402
 from models.clip_encoder import CLIPEncoder  # noqa: E402
-from utils import load_image, load_decoder, compute_psnr  # noqa: E402
+from src.utils import load_image, load_decoder, compute_psnr  # noqa: E402
 
 
 # ── Attack prompt catalog ────────────────────────────────────────

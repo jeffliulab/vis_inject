@@ -1,4 +1,4 @@
-[![Language: English](https://img.shields.io/badge/Language-English-2f81f7?style=flat-square)](README.md) [![语言: 简体中文](https://img.shields.io/badge/语言-简体中文-e67e22?style=flat-square)](README_CN.md)
+[![Language: English](https://img.shields.io/badge/Language-English-2f81f7?style=flat-square)](README.md) [![语言: 简体中文](https://img.shields.io/badge/语言-简体中文-e67e22?style=flat-square)](README_zh.md)
 
 # VisInject v1.0
 
@@ -98,10 +98,11 @@ Tested the strongest injection case (URL + code screenshot) on GPT-4o:
 
 ```
 VisInject/
-├── pipeline.py              # End-to-end: Stage 1 → 2 → 3
-├── generate.py              # Stage 2: AnyAttack fusion
-├── config.py                # Single source of truth for all hyperparameters
-├── utils.py                 # Shared utilities
+├── src/                     # Core source code
+│   ├── config.py            # Single source of truth for all hyperparameters
+│   ├── pipeline.py          # End-to-end: Stage 1 → 2 → 3
+│   ├── generate.py          # Stage 2: AnyAttack fusion
+│   └── utils.py             # Shared utilities
 │
 ├── attack/                  # Stage 1: PGD optimization
 │   ├── universal.py
@@ -134,7 +135,7 @@ VisInject/
 │   └── succeed_injection_examples/  # 10 curated injection cases
 │
 ├── CLAUDE.md                # Agent guide
-├── README.md / README_CN.md # Bilingual docs
+├── README.md / README_zh.md # Bilingual docs
 └── 实验报告.md              # Full experiment report (Chinese)
 ```
 

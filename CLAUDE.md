@@ -20,13 +20,14 @@ VisInject 是一个**对视觉语言模型（VLM）做对抗性 prompt injection
 ```
 VisInject/
 ├── CLAUDE.md                    ← 你正在读
-├── README.md / README_CN.md     ← 双语门面
+├── README.md / README_zh.md     ← 双语门面
 ├── 实验报告.md                   ← 实验叙事主档（中文，正式报告）
 │
-├── pipeline.py                  ← 端到端入口（CLI + cache）
-├── generate.py                  ← Stage 2 实现
-├── config.py                    ← 唯一配置中心
-├── utils.py                     ← 共享工具
+├── src/                         ← 核心源码（v2.0 从根目录移入）
+│   ├── config.py                ← 唯一配置中心
+│   ├── pipeline.py              ← 端到端入口（CLI + cache）
+│   ├── generate.py              ← Stage 2 实现
+│   └── utils.py                 ← 共享工具
 │
 ├── attack/                      ← Stage 1：PGD 优化
 │   ├── universal.py
@@ -89,8 +90,8 @@ VisInject/
 
 ## Code Conventions
 
-- **扁平根布局**——`pipeline.py`、`generate.py`、`config.py` 等都在根。**不要引入 `src/` 重构**
-- **`config.py` 是所有超参数的单一数据源**。新参数先加这里，不允许散落常量
+- **核心源码在 `src/`**——`pipeline.py`、`generate.py`、`config.py`、`utils.py` 在 `src/` 目录中（v2.0 从根目录移入）
+- **`src/config.py` 是所有超参数的单一数据源**。新参数先加这里，不允许散落常量
 - **所有 VLM 通过 `models/registry.py` 注册**。加新 VLM 看 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 - **不破坏 `models/mllm_wrapper.py` 的接口契约**（修改前要 grep 所有 wrapper）
 - **outputs 命名约定**：`exp_<prompt>_<config>/{universal,adversarial,results}/`，详见 [`docs/RESULTS_SCHEMA.md`](docs/RESULTS_SCHEMA.md)
@@ -167,7 +168,7 @@ VisInject/
    - `model_registry.py` → `models/registry.py`（属于 models 包的一部分）
    - 删除：`view_results.py`（陈旧）、`data_preparation/laion_art/`（放弃的 art decoder 训练）、`data_preparation/demo_images/`（遗留）
    - 新建 `CLAUDE.md`（本文件）作为 agent 入门指南
-   - 全面同步 `README.md` / `README_CN.md` / `实验报告.md` / `.gitignore`（清掉幽灵路径）
+   - 全面同步 `README.md` / `README_zh.md` / `实验报告.md` / `.gitignore`（清掉幽灵路径）
 
 4. **根目录瘦身**
    - 之前根目录 6 个 .py：`pipeline.py / generate.py / config.py / utils.py / model_registry.py / web_demo.py`
@@ -216,7 +217,7 @@ VisInject/
    - GPT-4o 主动识别对抗噪声为"distortion, artifacts"，正确恢复代码内容
 
 5. **v1.0 封版**
-   - README.md / README_CN.md 按 agent-rules 规范重写（双语 badge、Highlights、Key Results）
+   - README.md / README_zh.md 按 agent-rules 规范重写（双语 badge、Highlights、Key Results）
    - 全部 docs/ 文档更新
    - 实验报告全面更新（Section 2.4, 6.3-6.9, 7, 8, 9, 10）
    - 清理临时文件，更新 .gitignore

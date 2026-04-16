@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/agent-rules/**)",
+      "Read(//d/agent-rules/paths/**)",
+      "Read(//d/agent-rules/workflows/**)"
+    ]
+  }
+}

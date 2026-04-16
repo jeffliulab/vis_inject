@@ -22,9 +22,10 @@ model_cache/
 **/temp/
 
 # ---- 实验输出 ----
-# `outputs/experiments/` 和 `outputs/experiments_v2_dog_only/` 是已下载的实验快照，
-# 是叙事/复现性资料，应该入 git（约 32 MB）。
-# 但单次运行的临时输出目录（由 hpc_pipeline.sh full 模式默认创建）绝不入库：
+# Experiment data stored on HF Dataset (jeffliulab/visinject), not in git.
+# Only outputs/succeed_injection_examples/ is kept (small, curated showcase).
+outputs/experiments/
+outputs/experiments_v2_dog_only/
 outputs/universal/
 outputs/adversarial/
 outputs/results/

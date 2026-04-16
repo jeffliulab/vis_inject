@@ -26,7 +26,7 @@ sys.path.insert(
     0,
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
 )
-from config import (
+from src.config import (
     UNIVERSAL_ATTACK_CONFIG, ATTACK_TARGETS, ANYATTACK_CONFIG, OUTPUT_CONFIG,
 )
 
@@ -109,8 +109,8 @@ def run_generate(
     progress=None,
 ):
     """Run the VisInject pipeline and return results."""
-    from pipeline import run_universal_attack, run_anyattack_fusion
-    from utils import load_image, compute_psnr
+    from src.pipeline import run_universal_attack, run_anyattack_fusion
+    from src.utils import load_image, compute_psnr
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

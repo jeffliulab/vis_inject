@@ -32,11 +32,11 @@ import torch
 import torch.nn.functional as F
 from PIL import Image
 
-from config import (
+from src.config import (
     EVAL_CONFIG, ANYATTACK_CONFIG,
     UNIVERSAL_ATTACK_CONFIG, OUTPUT_CONFIG,
 )
-from utils import (
+from src.utils import (
     load_image, load_decoder, compute_psnr, compute_clip_similarities, CLIPEncoder,
 )
 from attack.universal import get_wrapper_for_model
