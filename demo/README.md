@@ -35,6 +35,25 @@ demo/
   universal images from scratch against arbitrary target phrases and
   arbitrary VLMs. Requires a local GPU.
 
+## `space_demo` Tabs
+
+The Space demo (`space_demo/app.py`) has two tabs:
+
+**Tab 1 — Try VisInject**: The interactive fusion tool. Upload any
+image, pick a target phrase and model config, and the app generates an
+adversarial image in real time (Stage 2 only, CPU).
+
+**Tab 2 — Injection Cases**: A gallery of 10 confirmed injection cases
+from the experiment matrix. For each case:
+- Clean vs adversarial image shown side-by-side
+- VLM response comparison (clean response vs adversarial response)
+- Cases are categorized by injection strength:
+  - **Confirmed** (2 cases) — target phrase clearly appears in adversarial response
+  - **Partial** (3 cases) — target phrase partially or indirectly surfaces
+  - **Weak** (5 cases) — subtle behavioral shift, target not literally present
+
+Case data is loaded from `outputs/succeed_injection_examples/manifest.json`.
+
 ## Relation to the batch experiments
 
 The production experiments are still driven by

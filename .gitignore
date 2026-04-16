@@ -77,3 +77,11 @@ pip-wheel-metadata/
 *.swp
 *.swo
 *~
+_*.py
+
+# ---- 二进制产物 ----
+*.pptx
+
+# ---- 可重新生成的输出 ----
+outputs/transfer_test/
+outputs/space_demo/

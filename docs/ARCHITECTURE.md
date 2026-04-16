@@ -43,7 +43,8 @@
 |---|---|
 | `evaluate/__init__.py` | 包入口。重导出 `pairs.py` 中的公开 API（`generate_response_pairs` 等），保持 `from evaluate import xxx` 向后兼容。 |
 | `evaluate/pairs.py` | Stage 3a — Response pair 生成 + 旧版 ASR/CLIP/caption 评估。HPC 端跑。 |
-| `evaluate/judge.py` | Stage 3b — LLM-as-Judge API 调用 + 跨 judge 验证。本地纯 API 跑。 |
+| `evaluate/judge.py` | Stage 3b — Dual-dimension programmatic evaluation (v2): Check1 Output Affected + Check2 Target Injected. No API needed. |
+| `evaluate/transfer.py` | Cross-model transferability analysis. Reads judge results to measure how attacks transfer across VLM architectures. |
 | `evaluate/README.md` | 包说明 + CLI 用法 |
 
 ### `data_preparation/` — 数据/模型下载工具
@@ -251,15 +252,36 @@ pipeline.py ──► attack/universal.py ──► universal_<hash>.png
 
 ---
 
-## Known TODOs
+## v1.0 Stable vs Future Work
 
-| 项 | 状态 | 备注 |
+### v1.0 Stable Models
+
+These four VLMs are fully tested and used in the v1.0 experiment matrix (21 experiments × 7 images):
+
+| Registry Key | Model | Notes |
 |---|---|---|
-| MiniGPT-4 wrapper | 注册了但 `models/minigpt4_wrapper.py` 不存在 | 选用即报错。要么实现，要么从 registry 删除 |
-| LLaVA-1.5 wrapper | 实现存在但与新版 transformers 的 image_token 处理不兼容 | 当前从 ATTACK_TARGETS 注释掉 |
-| Phi-3.5-Vision wrapper | DynamicCache.from_legacy_cache 兼容问题 | 用 Qwen2-VL-2B 替代 |
-| Llama-3.2-11B-Vision | 已实现但 VRAM 22 GB 超 H200 单卡舒适区 | 注释在 ATTACK_TARGETS 中，需要时手动启用 |
-| 评估问题分类 | 当前 user/agent/screenshot 三类，每类仅用前 5 个 | 想扩展可改 `evaluate/pairs.py` 的 `num_per_category` |
+| `qwen2_5_vl_3b` | Qwen2.5-VL-3B | Primary attack target, strongest injection results |
+| `blip2_opt_2_7b` | BLIP-2-OPT-2.7B | Encoder-decoder architecture, different attack surface |
+| `deepseek_vl_1_3b` | DeepSeek-VL-1.3B | Lightweight, included in 3m/4m configs |
+| `qwen2_vl_2b` | Qwen2-VL-2B | Smallest Qwen variant, included in 4m config |
+
+### Future / Experimental (not in v1.0 experiments)
+
+| Registry Key | Model | Status |
+|---|---|---|
+| `llava_1_5_7b` | LLaVA-1.5-7B | Image token mismatch with current transformers version |
+| `phi_3_5_vision` | Phi-3.5-Vision | `DynamicCache.from_legacy_cache` incompatibility |
+| `llama_3_2_11b_vision` | Llama-3.2-11B-Vision | Registered but not tested in experiments |
+| `instructblip_vicuna_7b` | InstructBLIP-Vicuna-7B | Not tested |
+| `blip2_flan_t5_xl` | BLIP-2-Flan-T5-XL | Not tested |
+| `deepseek_vl2_tiny` | DeepSeek-VL2-Tiny | Not tested |
+| `qwen2_5_vl_7b` | Qwen2.5-VL-7B | Not tested |
+
+These models have wrappers or registry entries but were excluded from v1.0 experiments due to compatibility issues or insufficient testing. Contributions welcome.
+
+### evaluate/transfer.py — Cross-Model Transferability
+
+`evaluate/transfer.py` is a new module for analyzing cross-model transferability of adversarial images. It reads judge results from experiments where multiple VLMs were attacked with the same universal perturbation and measures how well an attack optimized for one set of models transfers to others. This is relevant for understanding whether adversarial images generalize across VLM architectures.
 
 ---
 

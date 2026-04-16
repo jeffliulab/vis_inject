@@ -104,14 +104,12 @@ EVAL_CONFIG = {
 # Usage: python -m evaluate.judge --pairs-file response_pairs.json
 
 JUDGE_CONFIG = {
+    "version": 2,  # v2: dual-check (affected + injected), v1: legacy single-prompt
     "judges": [
-        {"name": "gpt-4o", "provider": "openai", "model": "gpt-4o"},
-        {"name": "claude-sonnet", "provider": "anthropic", "model": "claude-sonnet-4-6"},
-        {"name": "gpt-4o-mini", "provider": "openai", "model": "gpt-4o-mini"},
+        {"name": "deepseek", "provider": "deepseek", "model": "deepseek-chat"},
     ],
     "temperature": 0.0,
     "max_tokens": 300,
-    "min_valid_judges": 2,
 }
 
 # ── Output paths ──────────────────────────────────────────────────

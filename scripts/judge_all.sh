@@ -2,23 +2,36 @@
 # Batch-judge all response_pairs JSON files across experiments.
 #
 # Usage (from project root):
-#   bash scripts/judge_all.sh                          # judge all experiments, all default judges
-#   bash scripts/judge_all.sh --judges gpt-4o-mini     # specific judge(s)
+#   bash scripts/judge_all.sh                          # v2 judge all experiments (default)
+#   bash scripts/judge_all.sh --version v1             # legacy v1 mode
+#   bash scripts/judge_all.sh --judges gpt-4o-mini     # specific judge(s) (v1 only)
 #   bash scripts/judge_all.sh --exp exp_card_2m        # specific experiment only
+#   bash scripts/judge_all.sh --force                  # overwrite existing judge results
 #
 # Expects experiment results in outputs/experiments/exp_*/results/response_pairs_*.json
-# (or directly in outputs/experiments/exp_*/response_pairs_*.json for legacy layout)
 
 set -euo pipefail
 
 JUDGE_ARGS=""
 EXP_FILTER=""
+FORCE=false
+VERSION="v2"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --judges) JUDGE_ARGS="--judges $2"; shift 2 ;;
-        --exp)    EXP_FILTER="$2"; shift 2 ;;
-        *)        echo "Unknown arg: $1"; exit 1 ;;
+        --judges)
+            shift
+            JUDGE_NAMES=""
+            while [[ $# -gt 0 && ! "$1" == --* ]]; do
+                JUDGE_NAMES="$JUDGE_NAMES $1"
+                shift
+            done
+            JUDGE_ARGS="--judges $JUDGE_NAMES"
+            ;;
+        --exp)      EXP_FILTER="$2"; shift 2 ;;
+        --version)  VERSION="$2"; shift 2 ;;
+        --force)    FORCE=true; shift ;;
+        *)          echo "Unknown arg: $1"; exit 1 ;;
     esac
 done
 
@@ -27,7 +40,7 @@ TOTAL=0
 DONE=0
 SKIPPED=0
 
-echo "===== VisInject Batch Judge ====="
+echo "===== VisInject Batch Judge (${VERSION}) ====="
 echo ""
 
 for exp_dir in "${EXPERIMENTS_DIR}"/exp_*; do
@@ -62,15 +75,15 @@ for exp_dir in "${EXPERIMENTS_DIR}"/exp_*; do
         out_dir=$(dirname "$pairs_file")
         out_file="${out_dir}/judge_results_${image_name}.json"
 
-        # Skip if already judged
-        if [ -f "$out_file" ]; then
-            echo "       [skip] $image_name (already judged)"
+        # Skip if already judged (unless --force)
+        if [ -f "$out_file" ] && [ "$FORCE" = false ]; then
+            echo "       [skip] $image_name (already judged, use --force to overwrite)"
             SKIPPED=$((SKIPPED + 1))
             continue
         fi
 
         echo "       [judge] $image_name ..."
-        python -m evaluate.judge --pairs-file "$pairs_file" --output "$out_file" ${JUDGE_ARGS} || {
+        python -m evaluate.judge --pairs-file "$pairs_file" --output "$out_file" --version "$VERSION" ${JUDGE_ARGS} || {
             echo "       [FAIL] $image_name"
             continue
         }

@@ -183,11 +183,41 @@ VisInject/
 - Gradio 4.44 import `HfFolder`，但 huggingface_hub 1.0+ 删了它 → 升 Gradio 到 5.x
 
 **未做的事**（明确推迟）：
-- ❌ **LLM-as-Judge 评估还没跑**（GPT-4o-mini 全跑预估 $3-5）。`scripts/judge_all.sh` 已经写好，等用户确认后跑
-- ❌ Judge 跑完后要把 147 个 `judge_results_*.json` 增量上传到 HF Dataset
+- ❌ Judge 结果增量上传到 HF Dataset
 
 **留给下一次 agent 的注意事项**：
-- 跑 judge 前必须明确用户确认（rule #6）
-- Judge 跑完后，commit 新 JSON 时只追加 `judge_results_*.json`，不要动已有的 `response_pairs_*.json`
 - HF Dataset 增量上传用 `hf upload jeffliulab/visinject <local> <remote> --repo-type dataset --commit-message "Add judge results"`
-- 之后若要更新实验报告第 6 节（Injection Score 表），数据源是新生成的 judge_results JSON
+
+### 2026-04-16 — v2 评估系统 + 迁移性测试 + v1.0 封版
+
+**起点**：v1 LLM-as-Judge 混淆"输出干扰"与"目标注入"（报告 50.5% "注入率"实为干扰率），缺少迁移性研究。
+
+**完成的事**：
+
+1. **v2 评估系统**
+   - 重写 `evaluate/judge.py`：双维度评估（Check1 Output Affected + Check2 Target Injected）
+   - 不再需要 LLM API，改为程序化评估（文本相似度 + 关键词匹配）
+   - 7 个 Claude agent 并行判断全部 6,615 pairs → 写出 147 个 `judge_results_*.json`
+   - 更新 `config.py`（JUDGE_CONFIG 改为单 DeepSeek judge + version 2）
+   - 更新 `scripts/judge_all.sh`（支持 `--force` 和 `--version` 参数）
+
+2. **核心发现修正**
+   - v1: "注入率 50.5%" → v2: "干扰率 66.3%，注入率 0.23%"
+   - 10 个与目标相关的注入案例：2 确认 + 3 部分 + 5 弱
+   - 关键洞察：攻击是"破坏性"的（干扰 VLM 输出），不是"建设性"的（植入目标内容）
+
+3. **注入案例整理**
+   - 创建 `outputs/succeed_injection_examples/`：12 张图片（4 clean + 8 adv）+ manifest.json
+   - Demo 新增 "Injection Cases" Tab（Gradio，clean vs adv 图片/回答对比）
+
+4. **迁移性测试**
+   - 新建 `evaluate/transfer.py`：通过 vision API 测试跨模型迁移
+   - 手动测试 GPT-4o：最强注入案例（URL + 代码截图）在 GPT-4o 上完全失败
+   - GPT-4o 主动识别对抗噪声为"distortion, artifacts"，正确恢复代码内容
+
+5. **v1.0 封版**
+   - README.md / README_CN.md 按 agent-rules 规范重写（双语 badge、Highlights、Key Results）
+   - 全部 docs/ 文档更新
+   - 实验报告全面更新（Section 2.4, 6.3-6.9, 7, 8, 9, 10）
+   - 清理临时文件，更新 .gitignore
+   - 创建 v1.0 tag + v1.0-release branch

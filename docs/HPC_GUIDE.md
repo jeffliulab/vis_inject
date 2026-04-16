@@ -1,5 +1,7 @@
 # HPC_GUIDE.md — Tufts HPC 工作流
 
+> **Note**: This guide is specific to the Tufts University HPC cluster (pax). For other SLURM-based clusters, adapt the module paths, partition names, and conda environment paths accordingly. The Tufts-specific paths and commands below are intentionally hardcoded and should not be parameterized.
+
 > VisInject 在 Tufts HPC（pax 集群）上完整跑一轮实验的可复现指南。
 > 假设你已经有 Tufts cluster 账号、SSH 配置好、能访问 c26sp1ee0141 group。
 

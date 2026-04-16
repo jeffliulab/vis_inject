@@ -160,20 +160,94 @@ def run_fusion(prompt_choice: str, clean_image_path: str):
     return out_path, psnr_text, explanation
 
 
+def _load_injection_manifest():
+    """Load the injection cases manifest."""
+    manifest_path = os.path.join(
+        PROJECT_ROOT, "outputs", "succeed_injection_examples", "manifest.json"
+    )
+    if not os.path.exists(manifest_path):
+        return []
+    import json
+    with open(manifest_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+LEVEL_LABELS = {
+    "confirmed": "Confirmed Injection",
+    "partial": "Partial Injection",
+    "weak": "Weak Injection",
+}
+
+LEVEL_COLORS = {
+    "confirmed": "🔴",
+    "partial": "🟠",
+    "weak": "🟡",
+}
+
+
+def _case_dropdown_label(case):
+    emoji = LEVEL_COLORS.get(case["level"], "")
+    level = LEVEL_LABELS.get(case["level"], case["level"])
+    return (
+        f"{emoji} [{level}] {case['prompt_tag']} / "
+        f"{case['image']} / {case['vlm']} ({case['model_config']})"
+    )
+
+
+def show_injection_case(choice):
+    """Return details for a selected injection case."""
+    cases = _load_injection_manifest()
+    if not cases:
+        return None, None, "", "", "", ""
+
+    idx = 0
+    labels = [_case_dropdown_label(c) for c in cases]
+    if choice in labels:
+        idx = labels.index(choice)
+    case = cases[idx]
+
+    examples_dir = os.path.join(
+        PROJECT_ROOT, "outputs", "succeed_injection_examples"
+    )
+    clean_path = os.path.join(examples_dir, case["clean_image"])
+    adv_path = os.path.join(examples_dir, case["adv_image"])
+
+    clean_img = clean_path if os.path.exists(clean_path) else None
+    adv_img = adv_path if os.path.exists(adv_path) else None
+
+    level_text = LEVEL_LABELS.get(case["level"], case["level"])
+    info_text = (
+        f"Level: {level_text}\n"
+        f"Experiment: {case['experiment']}\n"
+        f"Model config: {case['model_config']}\n"
+        f"Target VLM: {case['vlm']}\n"
+        f"Attack prompt: \"{case['target_phrase']}\"\n"
+        f"Question asked: \"{case['question']}\""
+    )
+
+    return (
+        clean_img,
+        adv_img,
+        info_text,
+        case["response_clean"],
+        case["response_adv"],
+    )
+
+
 def build_ui():
     import gradio as gr
 
     choices = [_format_prompt_choice(tag, phrase) for tag, phrase in PROMPTS]
 
-    with gr.Blocks(title="VisInject Space Demo (Stage 2)") as demo:
+    with gr.Blocks(title="VisInject Demo") as demo:
         gr.Markdown(
-            "# VisInject Space Demo — Stage 2 fusion\n"
-            "Pick an attack prompt and upload a clean image. The app fuses "
-            "a precomputed universal adversarial image (Stage 1 output) "
-            "into your image via CLIP ViT-B/32 + the AnyAttack Decoder. "
-            "Runs on CPU; no VLM is loaded here."
+            "# VisInject Demo\n"
+            "Adversarial prompt injection for Vision-Language Models. "
+            "Two tabs: generate adversarial images (Stage 2), or browse "
+            "confirmed injection cases from experiments."
         )
 
+        # ── Tab 1: Generate adversarial image (existing) ──
         with gr.Tab("Generate adversarial image"):
             with gr.Row():
                 with gr.Column():
@@ -206,6 +280,69 @@ def build_ui():
                 inputs=[prompt_dd, clean_img],
                 outputs=[adv_img, psnr_box, explain_box],
             )
+
+        # ── Tab 2: Injection cases gallery ──
+        with gr.Tab("Injection Cases (10 examples)"):
+            gr.Markdown(
+                "## Successful Injection Cases\n"
+                "Browse the 10 cases where adversarial images caused VLMs to "
+                "output content related to the injection target. Each case "
+                "shows the clean image, adversarial image, and a side-by-side "
+                "comparison of VLM responses.\n\n"
+                "- 🔴 **Confirmed**: target phrase appears verbatim\n"
+                "- 🟠 **Partial**: target semantic category appears (e.g., "
+                "payment info instead of exact card number)\n"
+                "- 🟡 **Weak**: target topic fragments appear (e.g., "
+                "\"PRESIDENT\" for an election-related injection)"
+            )
+
+            injection_cases = _load_injection_manifest()
+            case_labels = [_case_dropdown_label(c) for c in injection_cases]
+
+            case_dd = gr.Dropdown(
+                choices=case_labels,
+                value=case_labels[0] if case_labels else None,
+                label="Select injection case",
+                info="Pick a case to view details",
+            )
+
+            with gr.Row():
+                with gr.Column():
+                    case_clean_img = gr.Image(label="Clean Image", type="filepath")
+                with gr.Column():
+                    case_adv_img = gr.Image(label="Adversarial Image", type="filepath")
+
+            case_info = gr.Textbox(label="Case Info", lines=6, interactive=False)
+
+            with gr.Row():
+                with gr.Column():
+                    resp_clean = gr.Textbox(
+                        label="VLM Response (Clean Image)",
+                        lines=12,
+                        interactive=False,
+                    )
+                with gr.Column():
+                    resp_adv = gr.Textbox(
+                        label="VLM Response (Adversarial Image)",
+                        lines=12,
+                        interactive=False,
+                    )
+
+            case_dd.change(
+                fn=show_injection_case,
+                inputs=[case_dd],
+                outputs=[case_clean_img, case_adv_img, case_info,
+                         resp_clean, resp_adv],
+            )
+
+            # Load first case on startup
+            if case_labels:
+                demo.load(
+                    fn=show_injection_case,
+                    inputs=[case_dd],
+                    outputs=[case_clean_img, case_adv_img, case_info,
+                             resp_clean, resp_adv],
+                )
 
     return demo
 
