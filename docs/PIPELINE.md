@@ -116,7 +116,7 @@ universal_image (3×224×224)
 **核心配置**（`config.py` 的 `ANYATTACK_CONFIG`）：
 | 参数 | 值 | 说明 |
 |---|---|---|
-| `decoder_path` | `checkpoints/coco_bi.pt` | 通过 `data_preparation/models/download_decoder_weights.py` 下载 |
+| `decoder_path` | `data/checkpoints/coco_bi.pt` | 通过 `data/preparation/models/download_decoder_weights.py` 下载 |
 | `clip_model` | "ViT-B/32" | 用 `open_clip` 加载 OpenAI CLIP |
 | `embed_dim` | 512 | CLIP image embedding 维度 |
 | `eps` | 16/255 | 噪声 L-inf 约束 |
@@ -202,7 +202,7 @@ universal_image (3×224×224)
                                            │ 写 judge_results_<image>.json
                                            ▼
                             ┌────────────────────────────────────┐
-                            │  实验报告.md  /  聚合分析            │
+                            │  docs/experiment_report.md / 聚合分析 │
                             └────────────────────────────────────┘
 ```
 
@@ -220,4 +220,4 @@ universal_image (3×224×224)
 - **HPC 工作流（如何运行）**：[`HPC_GUIDE.md`](HPC_GUIDE.md)
 - **JSON schema 字段级细节**：[`RESULTS_SCHEMA.md`](RESULTS_SCHEMA.md)
 - **代码模块图 + 扩展指南**：[`ARCHITECTURE.md`](ARCHITECTURE.md)
-- **完整实验叙事和结果**：[`../实验报告.md`](../实验报告.md)
+- **完整实验叙事和结果**：[`experiment_report.md`](experiment_report.md)

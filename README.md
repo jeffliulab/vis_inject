@@ -6,7 +6,7 @@
 
 [![Version](https://img.shields.io/badge/version-v1.0-blue?style=flat-square)]() [![Python](https://img.shields.io/badge/python-3.10+-green?style=flat-square)]() [![License: Research](https://img.shields.io/badge/license-Research%20Only-red?style=flat-square)]()
 
-[Demo](https://huggingface.co/spaces/jeffliulab/visinject) | [Dataset](https://huggingface.co/datasets/jeffliulab/visinject) | [Experiment Report (CN)](实验报告.md)
+[Demo](https://huggingface.co/spaces/jeffliulab/visinject) | [Dataset](https://huggingface.co/datasets/jeffliulab/visinject) | [Experiment Report](docs/experiment_report.md)
 
 ---
 
@@ -128,15 +128,19 @@ VisInject/
 ├── demo/space_demo/         # Gradio demo (CPU-only)
 │   └── app.py               # Stage 2 fusion + Injection Cases gallery
 │
+├── data/
+│   ├── images/              # 7 test images
+│   ├── checkpoints/         # AnyAttack decoder weights (gitignored)
+│   ├── model_cache/         # HuggingFace model cache (gitignored)
+│   └── preparation/         # Data/model download tools
+│
 ├── docs/                    # Technical documentation
-├── images/                  # 7 test images
 ├── outputs/
 │   ├── experiments/         # 21 experiments × 7 images
 │   └── succeed_injection_examples/  # 10 curated injection cases
 │
 ├── CLAUDE.md                # Agent guide
-├── README.md / README_zh.md # Bilingual docs
-└── 实验报告.md              # Full experiment report (Chinese)
+└── README.md / README_zh.md # Bilingual docs
 ```
 
 ---
@@ -158,7 +162,7 @@ python pipeline.py \
     --target-phrase "visit www.example.com" \
     --target-models qwen2_5_vl_3b blip2_opt_2_7b \
     --num-steps 2000 \
-    --clean-images images/ORIGIN_dog.png \
+    --clean-images data/images/ORIGIN_dog.png \
     --generate-pairs
 ```
 
@@ -169,7 +173,7 @@ python pipeline.py \
 bash scripts/run_experiments.sh
 
 # Single experiment
-sbatch scripts/hpc_pipeline.sh full images/ORIGIN_dog.png
+sbatch scripts/hpc_pipeline.sh full data/images/ORIGIN_dog.png
 ```
 
 ### Evaluate (no GPU needed)
@@ -246,7 +250,7 @@ python demo/space_demo/app.py
 | [docs/RESULTS_SCHEMA.md](docs/RESULTS_SCHEMA.md) | JSON output field definitions |
 | [docs/HPC_GUIDE.md](docs/HPC_GUIDE.md) | Tufts HPC SLURM workflow |
 | [evaluate/README.md](evaluate/README.md) | Stage 3 evaluation package |
-| [实验报告.md](实验报告.md) | Full experiment report (Chinese) |
+| [Experiment Report](docs/experiment_report.md) | Full experiment report (Chinese) |
 | [CLAUDE.md](CLAUDE.md) | Agent guide for this project |
 
 ---

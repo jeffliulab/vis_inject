@@ -48,19 +48,19 @@ export HF_HOME=/cluster/tufts/c26sp1ee0141/pliu07/model_cache
 
 # 三个核心 VLM（约 13 GB）
 /cluster/tufts/c26sp1ee0141/pliu07/condaenv/visinject/bin/python \
-    data_preparation/models/download_all_models.py --stage quick
+    data/preparation/models/download_all_models.py --stage quick
 
 # 全部 5 个 VLM（约 37 GB）
 /cluster/tufts/c26sp1ee0141/pliu07/condaenv/visinject/bin/python \
-    data_preparation/models/download_all_models.py --stage full
+    data/preparation/models/download_all_models.py --stage full
 ```
 
 ### 4. 下载 AnyAttack Decoder 权重（约 320 MB）
 
 ```bash
 /cluster/tufts/c26sp1ee0141/pliu07/condaenv/visinject/bin/python \
-    data_preparation/models/download_decoder_weights.py
-# 输出落到 checkpoints/coco_bi.pt
+    data/preparation/models/download_decoder_weights.py
+# 输出落到 data/checkpoints/coco_bi.pt
 ```
 
 ---
@@ -71,13 +71,13 @@ export HF_HOME=/cluster/tufts/c26sp1ee0141/pliu07/model_cache
 
 ```bash
 # 完整 3 阶段（默认）
-sbatch scripts/hpc_pipeline.sh full images/ORIGIN_dog.png
+sbatch scripts/hpc_pipeline.sh full data/images/ORIGIN_dog.png
 
 # 只跑 Stage 2（已有 universal 图）
-sbatch scripts/hpc_pipeline.sh inject images/ORIGIN_dog.png
+sbatch scripts/hpc_pipeline.sh inject data/images/ORIGIN_dog.png
 
 # 只跑 Stage 3a（已有 adv 图）
-sbatch scripts/hpc_pipeline.sh eval images/ORIGIN_dog.png
+sbatch scripts/hpc_pipeline.sh eval data/images/ORIGIN_dog.png
 ```
 
 监控：
@@ -201,6 +201,6 @@ bash scripts/judge_all.sh --judges gpt-4o-mini
 | `DynamicCache.from_legacy_cache` AttributeError | Phi-3.5 与新版 transformers 不兼容 | 用 Qwen2-VL-2B 替代 |
 | `LLaVA image token mismatch` | LLaVA wrapper 与新版 transformers 不兼容 | 暂时从 ATTACK_TARGETS 移除 LLaVA |
 | `AutoModelForVision2Seq` 缺失 | transformers 版本太老 | `evaluate/pairs.py` 已用 try/except 跳过 caption 评估 |
-| `decoder weights not found: checkpoints/coco_bi.pt` | 权重没下载 | 跑 `python data_preparation/models/download_decoder_weights.py` |
+| `decoder weights not found: data/checkpoints/coco_bi.pt` | 权重没下载 | 跑 `python data/preparation/models/download_decoder_weights.py` |
 | Universal 训练超 SLURM 时限 | num_steps 设太高或模型太大 | 降到 `--num-steps 1500` 或换 2m 配置 |
 | HF cache 重复下载 | 没设 `HF_HOME` 环境变量 | sbatch 脚本会 `export HF_HOME=...`，本地手动跑也要设 |

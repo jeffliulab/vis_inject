@@ -21,7 +21,6 @@ VisInject 是一个**对视觉语言模型（VLM）做对抗性 prompt injection
 VisInject/
 ├── CLAUDE.md                    ← 你正在读
 ├── README.md / README_zh.md     ← 双语门面
-├── 实验报告.md                   ← 实验叙事主档（中文，正式报告）
 │
 ├── src/                         ← 核心源码（v2.0 从根目录移入）
 │   ├── config.py                ← 唯一配置中心
@@ -62,20 +61,21 @@ VisInject/
 │       └── README.md
 │
 ├── docs/                        ← 技术文档
+│   ├── experiment_report.md     ← 实验叙事主档（中文，正式报告）
 │   ├── PIPELINE.md              ← 三阶段攻击机制
 │   ├── HPC_GUIDE.md             ← Tufts HPC 工作流
 │   ├── RESULTS_SCHEMA.md        ← JSON schema 字段级
 │   └── ARCHITECTURE.md          ← 代码模块图 + 扩展指南
 │
-├── data_preparation/            ← 数据/模型下载工具
-│   ├── README.md
-│   └── models/
-│       ├── download_all_models.py
-│       └── download_decoder_weights.py
-│
-├── images/                      ← 7 张测试 clean 图
-├── checkpoints/                 ← coco_bi.pt（gitignored）
-├── model_cache/                 ← HF 缓存（gitignored）
+├── data/                        ← 数据资源
+│   ├── images/                  ← 7 张测试 clean 图
+│   ├── checkpoints/             ← coco_bi.pt（gitignored）
+│   ├── model_cache/             ← HF 缓存（gitignored）
+│   └── preparation/             ← 数据/模型下载工具
+│       ├── README.md
+│       └── models/
+│           ├── download_all_models.py
+│           └── download_decoder_weights.py
 │
 └── outputs/
     ├── README.md
@@ -92,6 +92,7 @@ VisInject/
 
 - **核心源码在 `src/`**——`pipeline.py`、`generate.py`、`config.py`、`utils.py` 在 `src/` 目录中（v2.0 从根目录移入）
 - **`src/config.py` 是所有超参数的单一数据源**。新参数先加这里，不允许散落常量
+- **数据资源在 `data/`**——`data/images/`（测试图片）、`data/checkpoints/`（decoder 权重）、`data/model_cache/`（HF 缓存）、`data/preparation/`（下载工具）
 - **所有 VLM 通过 `models/registry.py` 注册**。加新 VLM 看 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 - **不破坏 `models/mllm_wrapper.py` 的接口契约**（修改前要 grep 所有 wrapper）
 - **outputs 命名约定**：`exp_<prompt>_<config>/{universal,adversarial,results}/`，详见 [`docs/RESULTS_SCHEMA.md`](docs/RESULTS_SCHEMA.md)
@@ -105,7 +106,7 @@ VisInject/
 | Conda env | `/cluster/tufts/c26sp1ee0141/pliu07/condaenv/visinject` |
 | HF cache | `/cluster/tufts/c26sp1ee0141/pliu07/model_cache` |
 | GPU | H200 80GB 单卡（partition `gpu`） |
-| 提交单 job | `sbatch scripts/hpc_pipeline.sh full images/ORIGIN_dog.png` |
+| 提交单 job | `sbatch scripts/hpc_pipeline.sh full data/images/ORIGIN_dog.png` |
 | 提交 21 job 矩阵 | `bash scripts/run_experiments.sh` |
 | 监控 | `squeue -u pliu07` |
 
@@ -116,7 +117,7 @@ VisInject/
 1. **研究代码，不要加测试套件 / CI**，除非用户明确要求
 2. **不要动 `outputs/experiments/` 内容**——这是冻结的实验数据
 3. **不要动 `outputs/experiments_v2_dog_only/`**——历史归档
-4. **不要删改 `实验报告.md` 的科学叙事内容**——只能在顶部加引用、追加新章节、或更新过期的命令字符串
+4. **不要删改 `docs/experiment_report.md` 的科学叙事内容**——只能在顶部加引用、追加新章节、或更新过期的命令字符串
 5. **优先编辑现有文件而不是新建**
 6. **`scripts/judge_all.sh` 会花 API 钱**（GPT-4o-mini 全跑约 $3-5），运行前**必须**明确用户确认
 7. **HPC 脚本的绝对路径不要"规范化"或参数化**，它们就是 Tufts 集群专用的，参数化反而引入风险
@@ -133,8 +134,8 @@ VisInject/
 | JSON 输出字段含义 | [`docs/RESULTS_SCHEMA.md`](docs/RESULTS_SCHEMA.md) |
 | 代码模块图 + 怎么加新 VLM/prompt | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) |
 | Stage 3 评估包的使用 | [`evaluate/README.md`](evaluate/README.md) |
-| 实验设计 + 结果叙事 | [`实验报告.md`](实验报告.md) |
-| 数据/模型下载 | [`data_preparation/README.md`](data_preparation/README.md) |
+| 实验设计 + 结果叙事 | [`docs/experiment_report.md`](docs/experiment_report.md) |
+| 数据/模型下载 | [`data/preparation/README.md`](data/preparation/README.md) |
 | 实验输出目录结构 | [`outputs/README.md`](outputs/README.md) |
 
 ---
@@ -168,7 +169,7 @@ VisInject/
    - `model_registry.py` → `models/registry.py`（属于 models 包的一部分）
    - 删除：`view_results.py`（陈旧）、`data_preparation/laion_art/`（放弃的 art decoder 训练）、`data_preparation/demo_images/`（遗留）
    - 新建 `CLAUDE.md`（本文件）作为 agent 入门指南
-   - 全面同步 `README.md` / `README_zh.md` / `实验报告.md` / `.gitignore`（清掉幽灵路径）
+   - 全面同步 `README.md` / `README_zh.md` / `docs/experiment_report.md` / `.gitignore`（清掉幽灵路径）
 
 4. **根目录瘦身**
    - 之前根目录 6 个 .py：`pipeline.py / generate.py / config.py / utils.py / model_registry.py / web_demo.py`

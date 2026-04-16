@@ -149,36 +149,35 @@ VisInject/
 │   ├── judge.py             # LLM-as-Judge（本地 API）
 │   └── README.md
 │
-├── images/                  # 测试图片（7 张）
-│   ├── ORIGIN_dog.png       # 自然照片：狗
-│   ├── ORIGIN_cat.png       # 自然照片：猫
-│   ├── ORIGIN_kpop.png      # 人物照片
-│   ├── ORIGIN_bill.png      # 票据/文档
-│   ├── ORIGIN_webpage.png   # 网页截图
-│   ├── ORIGIN_code.png      # VSCode 截图
-│   └── ORIGIN_chat.png      # 聊天界面截图
-│
-├── checkpoints/             # 模型权重（gitignored）
-│   └── coco_bi.pt           # AnyAttack Decoder 官方预训练权重（320MB）
+├── data/
+│   ├── images/              # 测试图片（7 张）
+│   │   ├── ORIGIN_dog.png   # 自然照片：狗
+│   │   ├── ORIGIN_cat.png   # 自然照片：猫
+│   │   ├── ORIGIN_kpop.png  # 人物照片
+│   │   ├── ORIGIN_bill.png  # 票据/文档
+│   │   ├── ORIGIN_webpage.png # 网页截图
+│   │   ├── ORIGIN_code.png  # VSCode 截图
+│   │   └── ORIGIN_chat.png  # 聊天界面截图
+│   ├── checkpoints/         # 模型权重（gitignored）
+│   │   └── coco_bi.pt       # AnyAttack Decoder 官方预训练权重（320MB）
+│   ├── model_cache/         # HuggingFace 模型缓存（gitignored）
+│   └── preparation/         # 数据/模型下载工具
 │
 ├── outputs/                 # 实验输出（gitignored）
 │   ├── experiments/         # 21 个对比实验的结果（v3）
 │   └── experiments_v2_dog_only/  # 历史归档（v2）
 │
-├── data_preparation/        # 模型下载工具
-│   ├── README.md
-│   └── models/              # HuggingFace 模型 + decoder 权重下载脚本
+├── docs/                    # 技术文档
+│   ├── experiment_report.md # 本文件
+│   ├── PIPELINE.md
+│   ├── HPC_GUIDE.md
+│   ├── RESULTS_SCHEMA.md
+│   └── ARCHITECTURE.md
 │
 ├── scripts/                 # Shell 脚本
 │   ├── run_experiments.sh   # 对比实验批量提交（21 个 sbatch job）
 │   ├── hpc_pipeline.sh      # 单次 HPC 任务脚本
 │   └── judge_all.sh         # 本地批量 judge 评估
-│
-├── docs/                    # 技术文档
-│   ├── PIPELINE.md
-│   ├── HPC_GUIDE.md
-│   ├── RESULTS_SCHEMA.md
-│   └── ARCHITECTURE.md
 │
 ├── CLAUDE.md                # Agent 工作指南
 ├── .env.example             # API Key 模板
@@ -228,7 +227,7 @@ VisInject/
 ### 4.3 HPC 上执行的主要操作
 
 1. **数据清理**：删除损坏的 LAION-Art 数据（4.7GB）、废弃的 StegoEncoder 输出（19GB）、无关模型缓存（~30GB），共释放约 71GB
-2. **模型下载**：通过 `data_preparation/models/download_all_models.py` 下载 DeepSeek-VL、LLaVA、Phi、Qwen2-VL-2B
+2. **模型下载**：通过 `data/preparation/models/download_all_models.py` 下载 DeepSeek-VL、LLaVA、Phi、Qwen2-VL-2B
 3. **依赖安装**：`pip install deepseek-vl einops sentencepiece attrdict`（DeepSeek-VL 的额外依赖）
 4. **实验提交**：通过 `scripts/run_experiments.sh` 批量提交 21 个 sbatch 任务
 5. **结果收集**：`scp` 下载 response_pairs JSON 到本地

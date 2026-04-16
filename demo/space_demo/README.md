@@ -17,7 +17,7 @@ optimization) is **not** executed here — the app simply picks one of the
 upload.
 
 The `app.py` in **this** directory is the **local-mode** variant: it
-expects `checkpoints/coco_bi.pt` and the universal images on local disk
+expects `data/checkpoints/coco_bi.pt` and the universal images on local disk
 (useful when developing the Space against your own changes before
 pushing). The deployed version is in the Space repo, not this directory.
 
@@ -44,9 +44,9 @@ Then open http://localhost:7860.
 
 Prerequisites:
 
-1. `checkpoints/coco_bi.pt` must exist. Download it with:
+1. `data/checkpoints/coco_bi.pt` must exist. Download it with:
    ```bash
-   python data_preparation/models/download_decoder_weights.py
+   python data/preparation/models/download_decoder_weights.py
    ```
 2. `outputs/experiments/exp_<tag>_2m/universal/universal_*.png` must
    exist for each of the 7 attack prompts. These are produced by the
@@ -58,7 +58,7 @@ The code in this directory is ready to deploy, but you will need to
 upload a few binary assets alongside it (they are gitignored in the main
 repo and therefore not pushed automatically):
 
-- `checkpoints/coco_bi.pt` (~320 MB) — the AnyAttack Decoder weights
+- `data/checkpoints/coco_bi.pt` (~320 MB) — the AnyAttack Decoder weights
 - `outputs/experiments/exp_<tag>_2m/universal/universal_*.png` for
   `<tag>` in `{card, url, apple, email, news, ad, obey}` (7 files, each
   ~600 KB)

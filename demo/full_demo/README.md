@@ -15,8 +15,8 @@ under `../space_demo/`.
   around 11 GB; enabling more targets scales this up linearly.
 - **CUDA** (the app auto-falls back to CPU, but Stage 1 is impractical
   on CPU — expect tens of minutes to hours per run).
-- `checkpoints/coco_bi.pt` for Stage 2 (download with
-  `python data_preparation/models/download_decoder_weights.py`).
+- `data/checkpoints/coco_bi.pt` for Stage 2 (download with
+  `python data/preparation/models/download_decoder_weights.py`).
 
 ## Usage
 

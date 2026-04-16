@@ -11,7 +11,7 @@ Usage:
     # Single test:
     python -m evaluate.transfer \
         --adv-image outputs/experiments/exp_url_2m/adversarial/adv_ORIGIN_code.png \
-        --clean-image images/ORIGIN_code.png \
+        --clean-image data/images/ORIGIN_code.png \
         --target-phrase "visit www.example.com" \
         --questions 5
 
@@ -193,7 +193,7 @@ def run_smoke_test(provider: str = "deepseek", model: str = "deepseek-chat"):
         print(f"{'='*60}")
 
         adv_path = project_root / "outputs" / "experiments" / exp / "adversarial" / f"adv_{img}.png"
-        clean_path = project_root / "images" / f"{img}.png"
+        clean_path = project_root / "data" / "images" / f"{img}.png"
 
         if not adv_path.exists():
             print(f"  SKIP: {adv_path} not found")

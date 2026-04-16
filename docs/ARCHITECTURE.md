@@ -47,13 +47,13 @@
 | `evaluate/transfer.py` | Cross-model transferability analysis. Reads judge results to measure how attacks transfer across VLM architectures. |
 | `evaluate/README.md` | 包说明 + CLI 用法 |
 
-### `data_preparation/` — 数据/模型下载工具
+### `data/preparation/` — 数据/模型下载工具
 
 | 文件 | 职责 |
 |---|---|
-| `data_preparation/models/download_all_models.py` | 批量下载 5 个 VLM + CLIP 到 `model_cache/` |
-| `data_preparation/models/download_decoder_weights.py` | 下载 AnyAttack `coco_bi.pt` 到 `checkpoints/` |
-| `data_preparation/README.md` | 用法说明 |
+| `data/preparation/models/download_all_models.py` | 批量下载 5 个 VLM + CLIP 到 `data/model_cache/` |
+| `data/preparation/models/download_decoder_weights.py` | 下载 AnyAttack `coco_bi.pt` 到 `data/checkpoints/` |
+| `data/preparation/README.md` | 用法说明 |
 
 ### `scripts/` — Shell 脚本
 
@@ -76,9 +76,9 @@
 
 | 目录 | 职责 |
 |---|---|
-| `images/` | 7 张测试 clean 图 (`ORIGIN_*.png`) |
-| `checkpoints/` | AnyAttack decoder 权重 (`coco_bi.pt`)，gitignored |
-| `model_cache/` | HuggingFace VLM 缓存，gitignored |
+| `data/images/` | 7 张测试 clean 图 (`ORIGIN_*.png`) |
+| `data/checkpoints/` | AnyAttack decoder 权重 (`coco_bi.pt`)，gitignored |
+| `data/model_cache/` | HuggingFace VLM 缓存，gitignored |
 | `outputs/experiments/` | 当前实验矩阵（21 exp × 7 img），见 `outputs/README.md` |
 | `outputs/experiments_v2_dog_only/` | 历史归档 |
 
@@ -176,7 +176,7 @@ python pipeline.py \
     --target-models instructblip_vicuna_7b \
     --target-phrase "test phrase" \
     --num-steps 50 \
-    --clean-images images/ORIGIN_dog.png
+    --clean-images data/images/ORIGIN_dog.png
 ```
 
 如果 50 步内 loss 在下降、output 文件正常生成，wrapper 就工作了。
@@ -213,8 +213,8 @@ bash scripts/run_experiments.sh
 
 ## Adding a New Test Image
 
-1. 把图丢进 `images/`，命名为 `ORIGIN_<name>.png`
-2. 编辑 `scripts/run_experiments.sh` 的 `CLEAN_IMGS` 列表加上 `images/ORIGIN_<name>.png`
+1. 把图丢进 `data/images/`，命名为 `ORIGIN_<name>.png`
+2. 编辑 `scripts/run_experiments.sh` 的 `CLEAN_IMGS` 列表加上 `data/images/ORIGIN_<name>.png`
 3. 重跑 `bash scripts/run_experiments.sh`（已缓存的 universal 图会复用，只跑 Stage 2 + 3a，几分钟搞定）
 
 ---
@@ -291,4 +291,4 @@ These models have wrappers or registry entries but were excluded from v1.0 exper
 - **HPC 运行步骤**：[`HPC_GUIDE.md`](HPC_GUIDE.md)
 - **JSON 字段细节**：[`RESULTS_SCHEMA.md`](RESULTS_SCHEMA.md)
 - **Stage 3 评估包说明**：[`../evaluate/README.md`](../evaluate/README.md)
-- **完整实验报告**：[`../实验报告.md`](../实验报告.md)
+- **完整实验报告**：[`experiment_report.md`](experiment_report.md)

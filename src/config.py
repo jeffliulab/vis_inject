@@ -85,7 +85,7 @@ ATTACK_TARGETS = [
 
 ANYATTACK_CONFIG = {
     "decoder_path": os.path.join(
-        _PROJECT_ROOT, "checkpoints", "coco_bi.pt"
+        _PROJECT_ROOT, "data", "checkpoints", "coco_bi.pt"
     ),
     "clip_model": "ViT-B/32",
     "embed_dim": 512,

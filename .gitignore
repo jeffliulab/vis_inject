@@ -1,88 +1,72 @@
 # ============================================================
-# VisInject 项目 .gitignore
+# VisInject .gitignore
 # ============================================================
 
-# ---- Python 字节码 ----
+# ---- Python ----
 __pycache__/
 *.py[cod]
 *$py.class
 *.pyo
+_*.py
 
-# ---- 统一模型缓存目录（HuggingFace 权重，体积大）----
-model_cache/
-
-# ---- 模型权重和中间张量（可能很大）----
+# ---- Model weights & caches (large, download on demand) ----
+data/checkpoints/
+data/model_cache/
 **/*.pt
 **/*.pth
 **/*.ckpt
 **/*.safetensors
 **/*.bin
 **/*.npy
-**/checkpoints/
-**/temp/
 
-# ---- 实验输出 ----
-# Experiment data stored on HF Dataset (jeffliulab/visinject), not in git.
-# Only outputs/succeed_injection_examples/ is kept (small, curated showcase).
+# ---- Experiment data (stored on HF Dataset, not in git) ----
+# Only outputs/succeed_injection_examples/ is tracked (small, curated).
 outputs/experiments/
 outputs/experiments_v2_dog_only/
 outputs/universal/
 outputs/adversarial/
 outputs/results/
+outputs/transfer_test/
+outputs/space_demo/
 
-# ---- HuggingFace / PyTorch 缓存（位于用户目录，不在项目内）----
-.cache/
-*.cache
+# ---- Binary artifacts ----
+*.pptx
+*.docx
 
-# ---- 环境变量 (含 API key) ----
+# ---- Secrets ----
 .env
 
-# ---- 虚拟环境 ----
+# ---- Virtual environments ----
 venv/
 env/
 .venv/
 ENV/
 
-# ---- IDE 配置 ----
+# ---- IDE ----
 .vscode/
 .idea/
 .cursor/
 *.suo
 *.user
 
-# ---- 操作系统生成文件 ----
+# ---- OS files ----
 Thumbs.db
-Thumbs.db:encdata
 desktop.ini
 $RECYCLE.BIN/
 .DS_Store
-.AppleDouble
-.LSOverride
 
-# ---- Python 打包产物 ----
+# ---- Build artifacts ----
 *.egg
 *.egg-info/
 dist/
 build/
-.eggs/
-pip-wheel-metadata/
 *.whl
 
-# ---- Jupyter Notebook ----
+# ---- Misc ----
 .ipynb_checkpoints/
-
-# ---- 临时文件 ----
 *.tmp
 *.temp
 *.bak
 *.swp
-*.swo
 *~
-_*.py
-
-# ---- 二进制产物 ----
-*.pptx
-
-# ---- 可重新生成的输出 ----
-outputs/transfer_test/
-outputs/space_demo/
+.cache/

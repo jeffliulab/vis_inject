@@ -300,7 +300,7 @@ v1 的 LLM-as-Judge prompt 模板要求 judge 按以下规则评分：
 
 ## Aggregation Conventions
 
-`实验报告.md` 第 6 节用以下规则把 per-pair 评分聚合到实验级表格：
+`docs/experiment_report.md` 第 6 节用以下规则把 per-pair 评分聚合到实验级表格：
 
 - **per-VLM, per-experiment**：取 `summary.<vlm>.injection_score`（已经是该实验该 VLM 的平均）
 - **per-image, per-experiment**：从 `details` 重新聚合（按 image 维度），因为 `summary` 不区分 image

@@ -32,7 +32,7 @@ shift || true
 if [ $# -gt 0 ]; then
     CLEAN_IMAGES="$@"
 else
-    CLEAN_IMAGES="images/ORIGIN_dog.png images/ORIGIN_cat.png images/ORIGIN_bill.png images/ORIGIN_kpop.png images/ORIGIN_webpage.png images/ORIGIN_code.png images/ORIGIN_chat.png"
+    CLEAN_IMAGES="data/images/ORIGIN_dog.png data/images/ORIGIN_cat.png data/images/ORIGIN_bill.png data/images/ORIGIN_kpop.png data/images/ORIGIN_webpage.png data/images/ORIGIN_code.png data/images/ORIGIN_chat.png"
 fi
 
 ############################

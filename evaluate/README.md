@@ -38,7 +38,7 @@ v2 使用**双维度程序化评估**，替代了 v1 的 LLM-as-Judge（GPT-4o /
 ```bash
 python -m evaluate.pairs \
     --adv-images outputs/experiments/exp_url_2m/adversarial/adv_ORIGIN_dog.png \
-    --clean-images images/ORIGIN_dog.png \
+    --clean-images data/images/ORIGIN_dog.png \
     --universal-image outputs/experiments/exp_url_2m/universal/universal_<hash>.png \
     --target-phrase "visit www.example.com"
 ```

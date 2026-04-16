@@ -6,7 +6,7 @@
 
 [![Version](https://img.shields.io/badge/version-v1.0-blue?style=flat-square)]() [![Python](https://img.shields.io/badge/python-3.10+-green?style=flat-square)]() [![License: Research](https://img.shields.io/badge/license-Research%20Only-red?style=flat-square)]()
 
-[Demo](https://huggingface.co/spaces/jeffliulab/visinject) | [数据集](https://huggingface.co/datasets/jeffliulab/visinject) | [实验报告](实验报告.md)
+[Demo](https://huggingface.co/spaces/jeffliulab/visinject) | [数据集](https://huggingface.co/datasets/jeffliulab/visinject) | [实验报告](docs/experiment_report.md)
 
 ---
 
@@ -128,15 +128,19 @@ VisInject/
 ├── demo/space_demo/         # Gradio 演示（仅 CPU）
 │   └── app.py               # 阶段二融合 + 注入案例展览
 │
+├── data/
+│   ├── images/              # 7 张测试图片
+│   ├── checkpoints/         # AnyAttack decoder 权重（gitignored）
+│   ├── model_cache/         # HuggingFace 模型缓存（gitignored）
+│   └── preparation/         # 数据/模型下载工具
+│
 ├── docs/                    # 技术文档
-├── images/                  # 7 张测试图片
 ├── outputs/
 │   ├── experiments/         # 21 实验 × 7 图片
 │   └── succeed_injection_examples/  # 10 个精选注入案例
 │
 ├── CLAUDE.md                # Agent 工作指南
-├── README.md / README_zh.md # 双语文档
-└── 实验报告.md              # 完整实验报告
+└── README.md / README_zh.md # 双语文档
 ```
 
 ---
@@ -158,7 +162,7 @@ python pipeline.py \
     --target-phrase "visit www.example.com" \
     --target-models qwen2_5_vl_3b blip2_opt_2_7b \
     --num-steps 2000 \
-    --clean-images images/ORIGIN_dog.png \
+    --clean-images data/images/ORIGIN_dog.png \
     --generate-pairs
 ```
 
@@ -169,7 +173,7 @@ python pipeline.py \
 bash scripts/run_experiments.sh
 
 # 单个实验
-sbatch scripts/hpc_pipeline.sh full images/ORIGIN_dog.png
+sbatch scripts/hpc_pipeline.sh full data/images/ORIGIN_dog.png
 ```
 
 ### 评估（不需要 GPU）
@@ -246,7 +250,7 @@ python demo/space_demo/app.py
 | [docs/RESULTS_SCHEMA.md](docs/RESULTS_SCHEMA.md) | JSON 输出字段定义 |
 | [docs/HPC_GUIDE.md](docs/HPC_GUIDE.md) | Tufts HPC SLURM 工作流 |
 | [evaluate/README.md](evaluate/README.md) | 阶段三评估包 |
-| [实验报告.md](实验报告.md) | 完整实验报告 |
+| [实验报告](docs/experiment_report.md) | 完整实验报告 |
 | [CLAUDE.md](CLAUDE.md) | Agent 工作指南 |
 
 ---

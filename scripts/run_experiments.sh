@@ -16,10 +16,10 @@ NUM_STEPS=2000
 
 # --- Clean images ---
 if [[ "${1:-}" == "--dog-only" ]]; then
-    CLEAN_IMGS="images/ORIGIN_dog.png"
+    CLEAN_IMGS="data/images/ORIGIN_dog.png"
     shift || true
 else
-    CLEAN_IMGS="images/ORIGIN_dog.png images/ORIGIN_cat.png images/ORIGIN_bill.png images/ORIGIN_kpop.png images/ORIGIN_webpage.png images/ORIGIN_code.png images/ORIGIN_chat.png"
+    CLEAN_IMGS="data/images/ORIGIN_dog.png data/images/ORIGIN_cat.png data/images/ORIGIN_bill.png data/images/ORIGIN_kpop.png data/images/ORIGIN_webpage.png data/images/ORIGIN_code.png data/images/ORIGIN_chat.png"
 fi
 
 # --- Prompts (7 attack scenarios) ---
