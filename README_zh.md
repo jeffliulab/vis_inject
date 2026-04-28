@@ -1,12 +1,12 @@
 [![Language: English](https://img.shields.io/badge/Language-English-2f81f7?style=flat-square)](README.md) [![语言: 简体中文](https://img.shields.io/badge/语言-简体中文-e67e22?style=flat-square)](README_zh.md)
 
-# VisInject v1.0
+# VisInject v1.1
 
 **针对视觉语言模型的对抗性提示注入** — 将不可见的提示嵌入图片像素，使 VLM 在用户正常提问时输出攻击者指定的内容。
 
-[![Version](https://img.shields.io/badge/version-v1.0-blue?style=flat-square)]() [![Python](https://img.shields.io/badge/python-3.10+-green?style=flat-square)]() [![License: Research](https://img.shields.io/badge/license-Research%20Only-red?style=flat-square)]()
+[![Version](https://img.shields.io/badge/version-v1.1-blue?style=flat-square)]() [![Python](https://img.shields.io/badge/python-3.10+-green?style=flat-square)]() [![License: Research](https://img.shields.io/badge/license-Research%20Only-red?style=flat-square)]()
 
-[Demo](https://huggingface.co/spaces/jeffliulab/visinject) | [数据集](https://huggingface.co/datasets/jeffliulab/visinject) | [实验报告](docs/experiment_report.md)
+[Demo](https://huggingface.co/spaces/jeffliulab/visinject) | [数据集](https://huggingface.co/datasets/jeffliulab/visinject) | [实验报告](docs/experiment_report.md) | [终版 PDF](report/pdf/main.pdf)
 
 ---
 
@@ -18,6 +18,16 @@
 - **10 个确认注入案例**，附 clean vs adversarial 回答对比
 - **迁移性测试**：攻击**无法迁移到 GPT-4o** — 大模型将对抗噪声识别为图像损坏
 - **BLIP-2 完全免疫**：Q-Former 架构过滤了对抗扰动（0% 受影响）
+
+---
+
+## 课程期末报告 / 演示
+
+课程期末项目的最终交付物集中在 [`report/`](report/)，与项目源码、技术文档严格分开：
+
+- **PDF 报告**（10 页，英文，原生 LaTeX）：[`report/pdf/main.pdf`](report/pdf/main.pdf)（已 commit）。
+- **PPT 幻灯片**（14 张，英文，16:9）：本地构建 `python report/scripts/build_slides.py` → `report/slides/VisInject_final.pptx`。
+- 构建依赖与约定见 [`report/README.md`](report/README.md)。
 
 ---
 
@@ -139,6 +149,11 @@ VisInject/
 │   ├── experiments/         # 21 实验 × 7 图片
 │   └── succeed_injection_examples/  # 10 个精选注入案例
 │
+├── report/                  # 课程期末报告交付物（与源码/文档隔离）
+│   ├── scripts/             # build_slides.py + figure 脚本
+│   ├── slides/              # 生成的 .pptx（gitignored）
+│   └── pdf/                 # LaTeX 工程 + main.pdf
+│
 ├── CLAUDE.md                # Agent 工作指南
 └── README.md / README_zh.md # 双语文档
 ```
@@ -250,7 +265,9 @@ python demo/space_demo/app.py
 | [docs/RESULTS_SCHEMA.md](docs/RESULTS_SCHEMA.md) | JSON 输出字段定义 |
 | [docs/HPC_GUIDE.md](docs/HPC_GUIDE.md) | Tufts HPC SLURM 工作流 |
 | [evaluate/README.md](evaluate/README.md) | 阶段三评估包 |
-| [实验报告](docs/experiment_report.md) | 完整实验报告 |
+| [实验报告](docs/experiment_report.md) | 完整实验报告（中文，主叙事） |
+| [终版 PDF 报告](report/pdf/main.pdf) | 课程期末报告（英文，LaTeX） |
+| [report/README.md](report/README.md) | 怎么编 PPT / PDF |
 | [CLAUDE.md](CLAUDE.md) | Agent 工作指南 |
 
 ---
