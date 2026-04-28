@@ -20,12 +20,9 @@ data/model_cache/
 **/*.npy
 
 # ---- Experiment data (stored on HF Dataset, not in git) ----
-# Only outputs/succeed_injection_examples/ is tracked (small, curated showcase).
-# All other outputs are local-only, backed up to HF Dataset.
+# Only outputs/succeed_injection_examples/ is tracked (small, curated).
 outputs/experiments/
 outputs/experiments_v2_dog_only/
-outputs/v2_attacks/
-outputs/v2_results/
 outputs/universal/
 outputs/adversarial/
 outputs/results/
