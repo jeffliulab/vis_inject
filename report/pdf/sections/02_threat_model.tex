@@ -1,30 +1,8 @@
 \section{Threat Model}
 \label{sec:threat}
 
-\paragraph{Setting.}
-A user uploads an image to a multimodal assistant and asks a benign question (e.g.\ ``describe this image'' or ``extract all text from this screenshot''). The attacker controls only the image pixels; they cannot edit the user's prompt, the system prompt, or the model weights. The attacker chooses one short \emph{target phrase} (a URL, a payment-information request, a piece of misinformation, etc.) before the attack begins, and succeeds if that phrase --- or its semantic class --- appears in the assistant's reply.
+A user uploads an image to a multimodal assistant and asks a benign question (e.g.\ ``describe this image'' or ``extract all text from this screenshot''). The attacker controls only the image pixels; the user prompt, the system prompt, and the model weights are off-limits. The attacker picks one short \emph{target phrase} (a URL, a payment-information request, a piece of misinformation, etc.) before the attack begins, and succeeds if that phrase --- or its semantic class --- appears in the assistant's reply.
 
-\paragraph{Capabilities.}
-We grant the attacker:
-\begin{itemize}
-  \item \textbf{Perfect knowledge of a small white-box ensemble.} The attacker can compute gradients through two to four open \vlm{}s (Qwen2.5-VL-3B, Qwen2-VL-2B, DeepSeek-VL-1.3B, BLIP-2-OPT-2.7B). These are the ``surrogates''.
-  \item \textbf{One target phrase per attack.} The optimisation objective is fixed at attack-construction time and reused across many test images.
-  \item \textbf{No access to the deployed (black-box) target.} The attacker does not query the deployed model during optimisation; transferability is what we measure in \S\ref{sec:discussion}.
-\end{itemize}
+We grant the attacker white-box access to a small ensemble of two to four open \vlm{}s used as \emph{surrogates} during optimisation. They never query the deployed model, so transferability is something we measure separately. Two perceptual constraints make the attack realistic rather than merely possible: the noise budget is $\Linf \leq 16/255$ (PSNR $\approx 25.2$~dB on every test image we use), and the user does not collaborate. The reply is judged against the clean baseline answer to the same prompt on the same image (with the noise removed).
 
-\paragraph{Constraints.}
-Two constraints make the attack realistic rather than merely possible:
-\begin{itemize}
-  \item \textbf{Perceptual budget.} The adversarial image must remain visually indistinguishable from the clean photo. We enforce $\Linf \leq 16/255$, which yields PSNR $\approx 25.2$~dB on every test image we use \citep{goodfellow2015explaining}.
-  \item \textbf{Benign user prompt.} The user does not collaborate with the attacker. The reply is judged against a clean baseline answer to the same prompt on the same image (with the noise removed).
-\end{itemize}
-
-\paragraph{Attack scenarios.}
-This setting is not hypothetical. We highlight three operational scenarios:
-\begin{enumerate}
-  \item \textbf{Hosted assistant uploads.} A user shares a screenshot or photo with a chat assistant. The model's reply is rendered to the user --- so any embedded URL, phone number, or payment instruction in the reply becomes a clickable target inside a trusted UI.
-  \item \textbf{LLM agents reading screenshots.} Browser-controlling agents observe the live page through screenshots. A poisoned page or banner ad can therefore steer what the agent perceives and what it does next.
-  \item \textbf{Tool replays / MCP.} Tool outputs (image attachments, OCR responses, retrieved documents) are fed back into the model. A persistent adversarial image inside a tool response can re-inject the payload across many turns of a long-running agent.
-\end{enumerate}
-
-The common thread is that the model treats user-supplied imagery as ground truth: it is the cheapest form of input to forge, and every defence below the model itself --- mailbox filters, link checkers, prompt sanitisers --- runs after the visual channel has already been read.
+This setting is not hypothetical. Three operational scenarios motivate the work: hosted-assistant uploads where any URL or address in the reply becomes a clickable target inside a trusted UI; LLM agents that read live-page screenshots, where a poisoned banner can steer what the agent does next; and tool-replay channels (MCP, OCR, retrieval), where a persistent adversarial image can re-inject a payload across many turns. The common thread is that the model treats user-supplied imagery as ground truth.

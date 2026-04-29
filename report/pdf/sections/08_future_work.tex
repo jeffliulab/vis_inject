@@ -1,0 +1,38 @@
+\section{Future Work --- VisInject v2}
+\label{sec:future}
+
+The v1 pipeline studies one point in a much wider design space: \emph{\eps{}-bounded gradient attacks against small open \vlm{}s}. A v2 plan is partially scoped on the \texttt{v2-dev} branch of the repository; this section describes what it would add.
+
+\subsection{Five attack categories}
+
+The current pipeline (now labelled C1) is one of five attack families that we want to compare against the same set of \vlm{}s and the same dual-dim evaluation:
+
+\begin{itemize}
+  \item \textbf{C1 -- Pixel-level (this report).} Stage~1 + Stage~2 with $\Linf = 16/255$. Strong drift, weak literal injection.
+  \item \textbf{C2 -- Typographic.} Render the target phrase as semi-transparent text overlaid on the image at a small alpha. No model retraining needed; trivially detectable by OCR but useful as a baseline upper bound for ``what if the payload were just visible''.
+  \item \textbf{C3 -- Steganography.} Embed the target phrase in least-significant-bit or DCT-coefficient channels. Survives ordinary visual inspection; we expect it to be filtered by JPEG re-encoding.
+  \item \textbf{C4 -- Cross-modal.} Image carries part of the payload (typographic or pixel-level), and a paired user prompt is crafted to elicit the rest. Exploits the joint visual-text grounding of \vlm{}s rather than either channel alone.
+  \item \textbf{C5 -- Scene spoofing.} Render fake notification / pop-up / watermark UI elements onto the photo. Targets \vlm{}s that read screenshots and treat any UI text as part of the user request.
+\end{itemize}
+
+The v2.0 milestone is a \emph{no-defence baseline}: $5$ attacks $\times$ $3$ \vlm{}s $\times$ $7$ images $\times$ $15$ questions $= 1{,}575$ pairs. C1 reuses the v1.1 numbers; C2--C5 are rebuilt from scratch. Each attack additionally reports PSNR / SSIM / LPIPS for stealth alongside the dual-dim ASR, so we can compare attacks not only by ``how often they work'' but by ``how detectable they are''.
+
+\subsection{Three defense layers}
+
+The same v2 plan introduces three defenses, each motivated by a v1 observation:
+
+\begin{itemize}
+  \item \textbf{D1 -- Input preprocessing.} JPEG re-encoding, mild Gaussian blur, OCR-based text detection on the upload, and frequency-domain anomaly detection. Targets the \eps{}-bounded gradient signal that powers C1; we expect it to also catch C3.
+  \item \textbf{D2 -- Q-Former bottleneck.} Port BLIP-2's information bottleneck into a Qwen-style \vlm{} as a defence layer. This is motivated directly by the v1 finding that BLIP-2 is fully immune at our perceptual budget. The question is whether the bottleneck's robustness can be transplanted, or whether it is entangled with BLIP-2's other architectural choices.
+  \item \textbf{D3 -- Multi-VLM consensus.} Run several \vlm{}s in parallel on the same upload and flag the request when their answers disagree past a similarity threshold. Trades inference cost for an attack-class-agnostic detector.
+\end{itemize}
+
+The v2.1 milestone is the full $5 \times 3$ attack-defense matrix --- each cell is a combination of one attack and one defence applied in sequence, evaluated by the same dual-dim judge.
+
+\subsection{Closed-model transferability, this time systematically}
+
+The single GPT-4o test in \S\ref{sec:discussion} is only suggestive. The v2.2 milestone is a systematic transfer study: pick the top-3 highest-ASR cases per attack and per \vlm{}, manually upload each to ChatGPT and Gemini with the same prompt the white-box test used, and grade the responses with the v2 judge. Total: $5$ attacks $\times$ $3$ cases $\times$ $2$ closed models $= 30$ pairs. Small but enough to give us a real number for ``how often does the strongest open-model attack transfer to a frontier model''.
+
+\subsection{Roadmap}
+
+The complete plan is laid out as five lettered milestones (\texttt{v2.0}, \texttt{v2.1P}, \texttt{v2.2P}, \texttt{v2.3P}, \texttt{v2.4P}, \texttt{v2.5P}) on the \texttt{v2-dev} branch. \texttt{v2.5} is the version we intend to submit as the next iteration of this report --- by which point the \emph{disruption $\neq$ injection} story we tell here should be extended into a multi-attack, multi-defence picture, with a real transferability number rather than a single anecdote.

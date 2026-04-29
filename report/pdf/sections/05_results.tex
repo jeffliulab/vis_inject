@@ -1,39 +1,16 @@
 \section{Results}
 \label{sec:results}
 
-\subsection{Aggregate}
+We report numbers along three axes that map to questions a reader is most likely to ask: ``how strongly is the model affected?'' (per-VLM), ``does the payload survive?'' (overall + per-prompt), and ``which images are easiest to inject?'' (per-image). Across all three axes the same pattern holds: \emph{disruption is broad, payload delivery is rare and clustered.}
 
-Table~\ref{tab:aggregate} summarises the headline numbers. PSNR sits at $25.2$~dB across every adversarial image --- comfortably inside the perceptual budget. The overall \emph{disruption} rate (Output-Affected score $> 0$ on average) is high, but the \emph{injection} rate (target phrase or close variant in the response) is two orders of magnitude lower.
+\subsection{Per-VLM --- the architecture story}
 
-\begin{table}[h]
-  \centering
-  \small
-  \begin{tabular}{lr}
-    \toprule
-    \textbf{Metric} & \textbf{Value} \\
-    \midrule
-    PSNR (mean across 147 adv.\ images) & $25.2$ dB \\
-    \Linf{} budget & $16/255$ \\
-    Total (clean, adv) response pairs   & $6{,}615$ \\
-    Pairs with $\text{Output-Affected} > 0$ & $\approx 66\%$ \\
-    Pairs with target phrase or close variant & $0.227\%$ ($15/6{,}615$) \\
-    Confirmed literal injections & $2$ \\
-    Partial (semantic-class) injections & $3$ \\
-    Weak (theme-fragment) injections & $5$ \\
-    \bottomrule
-  \end{tabular}
-  \caption{Aggregate evaluation results across all 147 experiment runs.}
-  \label{tab:aggregate}
-\end{table}
-
-\subsection{Per-VLM disruption}
-
-Table~\ref{tab:per-vlm} and Figure~\ref{fig:per-vlm} break the disruption rate down by target \vlm{}. The split is striking: every Qwen / DeepSeek model is disturbed on $\geq 98\%$ of pairs, while BLIP-2 is unchanged on $100\%$ of its $2{,}205$ pairs. Architecture, not parameter count, explains the gap --- BLIP-2 (2.7B) is larger than DeepSeek-VL (1.3B) yet is the only model that resists.
+Figure~\ref{fig:per-vlm} and Table~\ref{tab:per-vlm} tell the headline story. Every transformer-style \vlm{} is disrupted on virtually every pair we throw at it, regardless of parameter count: Qwen2.5-VL-3B at $100\%$, Qwen2-VL-2B at $100\%$, DeepSeek-VL-1.3B at $98.3\%$. BLIP-2-OPT-2.7B (the largest of the four, in fact) sits at $0.00\%$ across all $2{,}205$ pairs. The split is not noisy --- BLIP-2 simply does not produce a different answer for the adversarial photo at this perceptual budget.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.78\textwidth]{figures/per_vlm.pdf}
-  \caption{Mean Output-Affected score by target \vlm{}. BLIP-2 is fully immune at this perceptual budget; the three transformer-style \vlm{}s are disrupted on virtually every pair.}
+  \caption{Mean Output-Affected score by target \vlm{}. The architecture matters far more than size: BLIP-2's Q-Former bottleneck is what filters the perturbation, not its parameter count.}
   \label{fig:per-vlm}
 \end{figure}
 
@@ -50,18 +27,66 @@ Table~\ref{tab:per-vlm} and Figure~\ref{fig:per-vlm} break the disruption rate d
     BLIP-2-OPT-2.7B  & $0.00 / 10$ & $\phantom{0}\phantom{0}0.0\%$ & $0.00\%$ & $2{,}205$ \\
     \bottomrule
   \end{tabular}
-  \caption{Per-target-\vlm{} dual-dimension scores. Disruption is broad; injection is rare; BLIP-2 is fully immune.}
+  \caption{Per-target-\vlm{} dual-dimension scores. BLIP-2 is fully immune; the other three are universally disrupted but only minimally injected.}
   \label{tab:per-vlm}
 \end{table}
 
-\subsection{Per-target-phrase}
+The architecture explanation is straightforward: BLIP-2 routes the image through a small set of learned query tokens (the Q-Former) before any cross-attention with the language model. The bottleneck is information-lossy and discards the \eps{}-bounded perturbation we paid so much to compute. The other three \vlm{}s feed visual features into the language model directly, so the perturbation arrives intact.
 
-The disruption rate is essentially flat across target phrases (all between $66.0\%$ and $66.5\%$), confirming that drift is a model-architecture phenomenon rather than a payload-specific one. The injection rate, however, is highly target-dependent: \texttt{news} reaches $1.06\%$ (driven by the weak ``PRESIDENT''-fragment cases on cat/kpop images), \texttt{url} sits at $0.21\%$ (the only literal injections), and \texttt{apple}, \texttt{obey}, and \texttt{ad} produce zero detected injections in this evaluation.
+\subsection{Per-prompt --- which payloads survive the carrier}
 
-\subsection{Per-test-image}
+Disruption is essentially flat across the seven target phrases (Table~\ref{tab:per-prompt} below): all of them produce $66.0\%$--$66.5\%$ disruption when we pool the \vlm{}s. Injection, however, varies by an order of magnitude. The phrase \texttt{news} reaches $1.06\%$ (driven by the weak fragment cases on \texttt{cat} / \texttt{kpop}); the literal-text URL reaches $0.21\%$; and the open-ended phrases \texttt{apple}, \texttt{obey}, \texttt{ad} produce zero detected injections in this evaluation.
 
-Restricting to the three non-immune \vlm{}s (Table~\ref{tab:per-vlm}), the disruption rate is high on all images (range $97.8$--$100.0\%$). The injection rate, in contrast, lands almost entirely on screenshots: \texttt{code} ($0.48\%$), \texttt{bill} ($0.48\%$), and \texttt{cat} ($1.27\%$, dominated by weak fragments). Natural photos like \texttt{dog} ($0.00\%$) and \texttt{webpage} ($0.00\%$) draw no detected injections at all. The next section unpacks why.
+\begin{table}[h]
+  \centering
+  \small
+  \begin{tabular}{lcc}
+    \toprule
+    \textbf{Prompt}   & \textbf{Disruption rate}  & \textbf{Injection rate} \\
+    \midrule
+    \texttt{apple}    & $66.5\%$  & $0.00\%$  \\
+    \texttt{obey}     & $66.5\%$  & $0.00\%$  \\
+    \texttt{ad}       & $66.3\%$  & $0.00\%$  \\
+    \texttt{url}      & $66.5\%$  & $0.21\%$  \\
+    \texttt{news}     & $66.2\%$  & $1.06\%$  \\
+    \texttt{email}    & $66.0\%$  & $0.11\%$  \\
+    \texttt{card}     & $66.0\%$  & $0.21\%$  \\
+    \bottomrule
+  \end{tabular}
+  \caption{By target prompt. Disruption is uniform; injection depends on whether the payload's \emph{kind} (literal URL, fragment, account vocabulary) survives Stage~2's decoder.}
+  \label{tab:per-prompt}
+\end{table}
+
+The takeaway is that AnyAttack-style fusion preserves \emph{semantic class} but not literal content. Specific tokens that survive Stage~1 routinely fail to survive Stage~2: ``account number'' replaces ``card number''; \texttt{info@xyzlogistics.com} replaces \texttt{support@fakecorp.com}; URL fragments survive only when the image already invites text transcription.
+
+\subsection{Per-image --- semantics of the carrier matters}
+
+If we restrict to the three non-immune \vlm{}s (Table~\ref{tab:per-image}), the disruption rate is high on every image. The injection rate, however, is concentrated on screenshots: \texttt{code} ($0.48\%$), \texttt{bill} ($0.48\%$), \texttt{cat} ($1.27\%$, dominated by weak fragments). Natural photos like \texttt{dog} ($0.00\%$) and \texttt{webpage} ($0.00\%$) draw no detected injections.
+
+\begin{table}[h]
+  \centering
+  \small
+  \begin{tabular}{l l c c}
+    \toprule
+    \textbf{Image}            & \textbf{Type}            & \textbf{Disruption} & \textbf{Injection} \\
+    \midrule
+    \texttt{ORIGIN\_code}     & code editor               & $100.0\%$ & $0.48\%$ \\
+    \texttt{ORIGIN\_webpage}  & browser screenshot        & $99.0\%$  & $0.00\%$ \\
+    \texttt{ORIGIN\_bill}     & document scan             & $99.2\%$  & $0.48\%$ \\
+    \texttt{ORIGIN\_dog}      & natural photo             & $100.0\%$ & $0.00\%$ \\
+    \texttt{ORIGIN\_cat}      & natural photo             & $100.0\%$ & $1.27\%$ \\
+    \texttt{ORIGIN\_chat}     & chat UI screenshot        & $97.8\%$  & $0.00\%$ \\
+    \texttt{ORIGIN\_kpop}     & person, photo collage     & $100.0\%$ & $0.16\%$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{By test image (BLIP-2 excluded — it would zero everything). Injection clusters on \texttt{code}, \texttt{bill} and \texttt{cat}; the latter is mostly weak political fragments.}
+  \label{tab:per-image}
+\end{table}
 
 \subsection{Effect of surrogate ensemble size}
 
-Increasing the surrogate count from \texttt{2m} to \texttt{4m} raises the disruption rate from $50.0\%$ to $74.6\%$, but leaves the injection rate near $0.2\%$ across all three configurations. More surrogates broaden the basin of disrupted models, but they do not unlock new payloads --- an architectural ceiling, not a budget ceiling.
+Increasing the surrogate count from \texttt{2m} ($50.0\%$ disruption) to \texttt{3m} ($66.1\%$) to \texttt{4m} ($74.6\%$) raises the disruption rate but leaves the injection rate near $0.2\%$ across all three configurations. More surrogates broaden the basin of disrupted models, but they do not unlock new payloads --- this is an architectural ceiling, not a budget ceiling.
+
+\subsection{What the numbers say in one paragraph}
+
+If the question is ``can a $\Linf = 16/255$ adversarial image change a small \vlm{}'s output?'', the answer is overwhelmingly yes (every transformer-style \vlm{} we tested, $\geq 98\%$ of pairs). If the question is ``can it deliver a specific attacker-chosen phrase?'', the answer is overwhelmingly no ($0.227\%$ overall, $2$ literal injections in $6{,}615$ pairs). The few injections that do land sit on screenshots whose semantic class matches the payload's category --- exactly the conditions where the response space already \emph{contains} something close to the payload, and the perturbation can route the decoder toward it.

@@ -1,7 +1,7 @@
-\section{Method}
+\section{Building Blocks}
 \label{sec:method}
 
-\textsc{VisInject} decouples \emph{generating} the attack signal from \emph{transporting} it onto a natural photo, and from \emph{measuring} the result. Figure~\ref{fig:pipeline} shows the three stages.
+\textsc{VisInject} is the composition of two existing papers plus a small evaluation contribution of our own. Figure~\ref{fig:pipeline} shows the resulting three-stage pipeline.
 
 \begin{figure}[t]
   \centering
@@ -10,41 +10,26 @@
   \label{fig:pipeline}
 \end{figure}
 
-\subsection{Stage 1 --- UniversalAttack}
-\label{sec:method-stage1}
+\subsection{Stage 1 from Rahmatullaev et al.\ \citeyearpar{rahmatullaev2025universal} --- a universal adversarial image}
 
-Let $f_i: \mathcal{I} \times \mathcal{T} \to \mathcal{T}$ denote the $i$-th surrogate \vlm{}, $x_0 \in [0,1]^{H \times W \times 3}$ a fixed grey image, $\mathcal{P} = \{p_1, \ldots, p_{60}\}$ a set of $60$ benign questions, and $y^\star$ the chosen target phrase. We optimise an unbounded latent $z_1 \in \mathbb{R}^{H \times W \times 3}$ with the reparameterisation
-\begin{equation}
-  x = 0.5 + \gamma \cdot \tanh(z_1), \qquad \gamma = 0.5,
-  \label{eq:reparam}
-\end{equation}
-which keeps $x \in [0,1]$ without an explicit projection step. The training objective is the sum of token-level cross-entropy losses across all surrogates and all benign prompts:
-\begin{equation}
-  \mathcal{L}(x) \;=\; \sum_{i=1}^{N} \sum_{p \in \mathcal{P}} \mathrm{CE}\!\bigl(f_i(x, p),\; y^\star\bigr).
-  \label{eq:loss}
-\end{equation}
-We minimise $\mathcal{L}$ with Adam ($\text{lr}=10^{-2}$) for $2{,}000$ steps. The output is a single \emph{universal adversarial image} $x_u$ that nudges every white-box \vlm{} toward $y^\star$ regardless of the question. The surrogate ensemble size $N \in \{2, 3, 4\}$ is the ``model configuration'' (\texttt{2m}, \texttt{3m}, \texttt{4m}) that we sweep in \S\ref{sec:experiments}.
+The first paper trains a single image that, when fed to a target \vlm{} together with \emph{any} of $60$ benign prompts, nudges the \vlm{} toward emitting a fixed target phrase. Concretely, it starts from a grey image, reparameterises pixels as $x = 0.5 + \gamma \tanh(z_1)$ to keep them in $[0, 1]$, and minimises the sum of token-level cross-entropy across all \vlm{}s in a small ensemble and all $60$ prompts. Adam optimiser, $2{,}000$ steps, learning rate $10^{-2}$. The output is a single ``universal adversarial image'' $x_u$ that we use without further modification. We sweep the ensemble size $N \in \{2, 3, 4\}$ as configurations \texttt{2m}, \texttt{3m}, \texttt{4m}.
 
-\subsection{Stage 2 --- AnyAttack Fusion}
-\label{sec:method-stage2}
+What we get from this paper is the \emph{signal}: an image with an attack baked in. What is missing is realism --- the universal image looks artificial, so a user uploading it would be flagged.
 
-The universal image $x_u$ is itself adversarial, but it does not look like a real photo, so it would betray the attack to a human looking at the upload. Stage~2 transports the attack signal onto an arbitrary clean photo $x_c$ using the pretrained \textsc{AnyAttack} decoder of \citet{zhang2025anyattack}, weights \texttt{coco\_bi.pt}.
+\subsection{Stage 2 from Zhang et al.\ \citeyearpar{zhang2025anyattack} --- transporting the signal onto any photo}
 
-A frozen CLIP ViT-B/16 \citep{radford2021clip} encodes $x_u$ into a 768-dimensional feature, which the \textsc{AnyAttack} decoder maps to a noise tensor $\delta(x_u)$ of the same spatial size as $x_c$. We add this noise under an \Linf{} budget:
+The second paper trains a CLIP+Decoder pair that maps any image's CLIP feature into an $\eps$-bounded noise tensor. The noise can be added to any clean photo to produce an adversarial photo within an $\Linf$ budget. We use the public weights (\texttt{coco\_bi.pt}) without retraining; we feed our universal image $x_u$ into the encoder and add the resulting noise to each of seven natural test photos:
 \begin{equation}
   x_a \;=\; \mathrm{clip}_{[0,1]}\!\Bigl(x_c + \mathrm{clip}_{[-\eps,\eps]}\bigl(\delta(x_u)\bigr)\Bigr), \qquad \eps = 16/255.
-  \label{eq:fuse}
 \end{equation}
-Crucially, the decoder is reused as-is~--~we do not retrain it. This makes the attack reproducible from public weights and decouples Stage~1 (which is expensive) from Stage~2 (which is essentially free per new clean image). The cost is that the decoder sometimes erases payload specifics --- a tradeoff we quantify in \S\ref{sec:results}.
+What this paper gives us is the \emph{carrier}: a way to transport an adversarial signal onto a real-looking photo without retraining anything. What is missing is targetedness --- on its own, AnyAttack is good at making the answer drift, but it has no built-in semantic target.
 
-\subsection{Stage 3 --- Dual-Dimension Evaluation}
-\label{sec:method-stage3}
+\subsection{Composition --- why it works}
 
-Given a clean image $x_c$ and its adversarial counterpart $x_a$, we feed both to a target \vlm{} together with each of $45$ benign questions and collect the answers $r_c$ and $r_a$. A first-version evaluation \citep{rahmatullaev2025universal} would ask a judge model to rate ``how much $r_a$ deviates from $r_c$''. We found this conflates two effects:
+Stage~1 alone makes a strong but obviously-fake adversarial image. Stage~2 alone makes any photo subtly adversarial, but with no specific output target. Composed: Stage~1's universal image already encodes the target phrase in CLIP feature space; passing it through Stage~2's CLIP+Decoder transports that target into noise that can be added to a real photo. The resulting adversarial photo looks like the original ($\Linf = 16/255$, PSNR $\approx 25.2$~dB) and inherits the target signal --- with one important caveat that we measure in \S\ref{sec:results}: the decoder partially erases payload specifics.
 
-\begin{itemize}
-  \item \textbf{Output Affected (drift).} Did $r_a$ differ in any meaningful way from $r_c$? This catches the \vlm{} producing nonsense, hallucinated text fragments, or off-topic descriptions --- common, easy to score, but \emph{not} the same as a successful attack.
-  \item \textbf{Target Injected (payload).} Did $r_a$ contain the actual target phrase $y^\star$ (or a recognisable variant)? This is the metric the threat model in \S\ref{sec:threat} actually cares about.
-\end{itemize}
+\subsection{Stage 3 --- dual-dimension evaluation (our contribution)}
 
-Our second-version evaluation runs two independent programmatic checks on every (clean, adversarial) response pair: a longest-common-subsequence drift score for Output Affected, and a keyword/regex match for Target Injected. The dual-axis judgements remove the ``a deviation $\Rightarrow$ an injection'' shortcut and give us the gap reported in \S\ref{sec:results}.
+Earlier evaluations \citep{rahmatullaev2025universal} ask a judge model whether the adversarial response ``deviates from'' the clean response. We found this conflates two different things: \textbf{Output Affected} (did the answer change at all?) and \textbf{Target Injected} (did the attacker's chosen phrase actually appear?). On Qwen2.5-VL-3B, our v1 LLM-as-judge reported a $50.5\%$ ``injection rate''; our v2 dual-dim evaluation reports $100\%$ Output Affected but only $0.41\%$ Target Injected on the same data. The difference is not noise --- it is the difference between ``the model lost its train of thought'' and ``the attacker's payload was delivered''.
+
+We replace the judge with two simple programmatic checks: a longest-common-subsequence drift score for Output Affected, and a keyword/regex match (with a small set of close variants per target phrase) for Target Injected. The whole evaluation runs on a laptop CPU and costs nothing per pair --- a non-trivial advantage when sweeping $6{,}615$ pairs.
