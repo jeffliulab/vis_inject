@@ -56,22 +56,33 @@ SLIDE_W, SLIDE_H = prs.slide_width, prs.slide_height
 MARGIN = Inches(0.6)
 
 
-# python-pptx's bundled default template ships with a slide master that
-# includes decorative shapes (subtle diagonal accents on some renderers).
-# Strip them so every slide truly starts from a blank canvas — and strip the
-# placeholders on every layout for the same reason.
-def _strip_master_decorations() -> None:
+# python-pptx's bundled default template ships with a slide master whose
+# `<p:bg>` element is `<p:bgRef idx="1001">` — that "1001" is an index into
+# the theme's bgFillStyleLst, and the default theme's first fill style has a
+# subtle diagonal pattern that some renderers (Keynote in particular) draw.
+#
+# Stripping shapes alone is NOT enough; we have to also rewrite the master
+# and every layout's background fill itself so it stops referencing the
+# theme's pattern.  The cleanest path is python-pptx's public Background API.
+def _force_white_master_and_layouts() -> None:
     for master in prs.slide_masters:
+        # 1. Drop every shape on the master itself.
         for shape in list(master.shapes):
             sp = shape._element
             sp.getparent().remove(sp)
+        # 2. Replace the master's <p:bgRef …> with an explicit solid white.
+        master.background.fill.solid()
+        master.background.fill.fore_color.rgb = WHITE
+        # 3. Same treatment for every layout that hangs off this master.
         for layout in master.slide_layouts:
             for shape in list(layout.shapes):
                 sp = shape._element
                 sp.getparent().remove(sp)
+            layout.background.fill.solid()
+            layout.background.fill.fore_color.rgb = WHITE
 
 
-_strip_master_decorations()
+_force_white_master_and_layouts()
 
 
 # ---------------------------------------------------------------------------
