@@ -1,28 +1,44 @@
 \section{Building Blocks}
 \label{sec:method}
 
-\textsc{VisInject} is the composition of two existing papers plus a small evaluation contribution of our own. Figure~\ref{fig:pipeline} shows the resulting three-stage pipeline.
+\textsc{VisInject} is the composition of two named methods from the literature plus a small evaluation contribution of our own. Figure~\ref{fig:pipeline} shows the resulting three-stage pipeline.
 
 \begin{figure}[t]
   \centering
   \resizebox{\textwidth}{!}{\input{figures/pipeline}}
-  \caption{The three-stage \textsc{VisInject} pipeline. Stage~1 trains a single universal adversarial image against $N$ white-box \vlm{}s; Stage~2 transports the resulting signal onto an arbitrary clean photo using a pretrained \textsc{AnyAttack} decoder under an \Linf{} budget; Stage~3 evaluates each (clean, adversarial) response pair along two independent axes.}
+  \caption{The three-stage \textsc{VisInject} pipeline. Stage~1 runs the \textbf{Universal Adversarial Attack (UAA)} of \citet{rahmatullaev2025universal} to obtain a single universal adversarial image against $N$ white-box \vlm{}s; Stage~2 uses the pretrained \textbf{AnyAttack} encoder-decoder of \citet{zhang2025anyattack} to transport that signal onto an arbitrary clean photo under an \Linf{} budget; Stage~3 evaluates each (clean, adversarial) response pair along two independent axes.}
   \label{fig:pipeline}
 \end{figure}
 
-\subsection{Stage 1 from Rahmatullaev et al.\ \citeyearpar{rahmatullaev2025universal} --- a universal adversarial image}
+\subsection{Stage 1 --- Universal Adversarial Attack \citep{rahmatullaev2025universal}}
+\label{sec:method-stage1}
 
-The first paper trains a single image that, when fed to a target \vlm{} together with \emph{any} of $60$ benign prompts, nudges the \vlm{} toward emitting a fixed target phrase. Concretely, it starts from a grey image, reparameterises pixels as $x = 0.5 + \gamma \tanh(z_1)$ to keep them in $[0, 1]$, and minimises the sum of token-level cross-entropy across all \vlm{}s in a small ensemble and all $60$ prompts. Adam optimiser, $2{,}000$ steps, learning rate $10^{-2}$. The output is a single ``universal adversarial image'' $x_u$ that we use without further modification. We sweep the ensemble size $N \in \{2, 3, 4\}$ as configurations \texttt{2m}, \texttt{3m}, \texttt{4m}.
+The first paper introduces what its authors call a \emph{Universal Adversarial Attack} (UAA) on \emph{aligned multimodal LLMs}. ``Universal'' means \emph{prompt-universal}: the same image drives the target phrase regardless of how the user phrases their question. ``Aligned'' refers to the safety-tuning step that target \vlm{}s typically receive --- the paper's contribution is showing that UAA bypasses this alignment.
 
-What we get from this paper is the \emph{signal}: an image with an attack baked in. What is missing is realism --- the universal image looks artificial, so a user uploading it would be flagged.
+The mechanism, as we use it, has four named pieces:
 
-\subsection{Stage 2 from Zhang et al.\ \citeyearpar{zhang2025anyattack} --- transporting the signal onto any photo}
+\begin{itemize}
+  \item \textbf{Image reparameterisation.} Pixels are reparameterised as $x = 0.5 + \gamma \tanh(z_1)$ so the optimiser sees an unconstrained latent $z_1$ but the rendered image is automatically in $[0,1]$ --- no projection step needed.
+  \item \textbf{Masked cross-entropy loss.} For surrogate \vlm{} $f_i$, prompt $p$, and target phrase $y^\ast$, the per-step loss is the \emph{masked} token-level cross-entropy of the target tokens given the image and prompt. Every model wrapper in our codebase exposes a \texttt{compute\_masked\_ce\_loss} method that implements exactly this.
+  \item \textbf{Multi-prompt training.} Each PGD step samples one prompt at random from the 60-question pool of Appendix~\ref{app:questions}. The training loss is therefore an average over prompt phrasings, which is what makes the resulting image \emph{prompt-universal}.
+  \item \textbf{Multi-model ensemble loss.} The per-step loss is summed across all $N$ surrogate \vlm{}s in the ensemble. This is what gives the universal image cross-architecture coverage; we sweep $N \in \{2, 3, 4\}$ as configurations \texttt{2m}, \texttt{3m}, \texttt{4m}.
+\end{itemize}
 
-The second paper trains a CLIP+Decoder pair that maps any image's CLIP feature into an $\eps$-bounded noise tensor. The noise can be added to any clean photo to produce an adversarial photo within an $\Linf$ budget. We use the public weights (\texttt{coco\_bi.pt}) without retraining; we feed our universal image $x_u$ into the encoder and add the resulting noise to each of seven natural test photos:
+We optimise with Adam (lr~$10^{-2}$, $2{,}000$ steps). We additionally enable the paper's \emph{quantization-noise robustness} trick (a small Gaussian noise added during training to keep the attack robust under 8-bit quantisation when saved as PNG); the paper's \emph{multi-answer attack}, \emph{localisation crops}, and Gaussian-blur defences are turned off in our default configuration. The output is a single ``universal adversarial image'' $x_u \in [0,1]^{H \times W \times 3}$.
+
+What this paper gives us is the \emph{signal}: an image with an attack baked in. What is missing is realism --- $x_u$ does not look like a real photo, so a user uploading it would be flagged.
+
+\subsection{Stage 2 --- AnyAttack \citep{zhang2025anyattack}}
+\label{sec:method-stage2}
+
+The second paper, titled ``\textsc{AnyAttack}: Towards Large-Scale Self-Supervised Generation of Targeted Adversarial Examples for Vision-Language Models'', builds a foundation model for adversarial perturbation. The pipeline is an encoder-decoder pair: a frozen CLIP ViT-B/16 encoder \citep{radford2021clip} maps any input image to a $768$-d feature, and a learned decoder maps that feature to an \Linf{}-bounded noise tensor $\delta$ shaped like the target image. The decoder is trained \emph{self-supervised} on bidirectional COCO pairs (the \texttt{coco\_bi.pt} checkpoint we use), without any task-specific labels --- this is the ``foundation model'' framing in the paper.
+
+We use the public weights as-is, with no retraining. Stage~2 in our pipeline is therefore essentially free per new clean photo: encode $x_u$, decode to $\delta(x_u)$, project to the $\Linf$ ball, and add to a clean photo $x_c$:
 \begin{equation}
   x_a \;=\; \mathrm{clip}_{[0,1]}\!\Bigl(x_c + \mathrm{clip}_{[-\eps,\eps]}\bigl(\delta(x_u)\bigr)\Bigr), \qquad \eps = 16/255.
 \end{equation}
-What this paper gives us is the \emph{carrier}: a way to transport an adversarial signal onto a real-looking photo without retraining anything. What is missing is targetedness --- on its own, AnyAttack is good at making the answer drift, but it has no built-in semantic target.
+
+What this paper gives us is the \emph{carrier}: a way to deposit an adversarial perturbation onto any real photo, fully reproducible from public weights. What it does \emph{not} give us is a chosen target. \textsc{AnyAttack} on its own is a \emph{targeted-adversarial-example generator} only in the sense that it can be conditioned on an arbitrary target image; it has no built-in mechanism to encode a specific output phrase.
 
 \subsection{Composition --- why it works}
 

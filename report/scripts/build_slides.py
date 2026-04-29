@@ -455,8 +455,8 @@ def slide_3_pipeline():
     slide_header(slide, "Pipeline Overview", "Three decoupled stages.", page=3)
 
     stages = [
-        ("Stage 1", "UniversalAttack", "Train one universal\nadversarial image\nagainst N white-box VLMs.", NAVY),
-        ("Stage 2", "AnyAttack Fusion", "Transport the signal\nonto any clean photo,\nbounded by ε = 16/255.", ACCENT),
+        ("Stage 1", "Universal Adversarial Attack", "(Rahmatullaev et al. 2025)\nTrain one universal\nadversarial image $x_u$\nagainst N surrogate VLMs.", NAVY),
+        ("Stage 2", "AnyAttack", "(Zhang et al. CVPR 2025)\nCLIP encoder + pretrained\ndecoder transport $x_u$ onto\nany clean photo.", ACCENT),
         ("Stage 3", "Dual-dim Evaluation", "Score Output Affected\nand Target Injected\nas two independent axes.", GREEN),
     ]
 
@@ -499,19 +499,21 @@ def slide_3_pipeline():
 def slide_4_paper1():
     slide = blank_slide()
     section_label(slide, "Theory  •  Building block 1")
-    slide_header(slide, "Paper 1 — UniversalAttack",
-                 "Rahmatullaev et al., 2025  (arXiv:2502.07987)", page=4)
+    slide_header(slide, "Paper 1 — Universal Adversarial Attack (UAA)",
+                 "Rahmatullaev et al., 2025  (arXiv:2502.07987)  •  Universal Adversarial Attack on Aligned Multimodal LLMs",
+                 page=4)
 
     # Left: idea + bullets
     add_text(slide, MARGIN, Inches(1.85), Inches(7.0), Inches(0.4),
              "What it gives us", size=14, color=NAVY, bold=True)
     add_bullets(slide, MARGIN, Inches(2.3), Inches(7.0), Inches(3.8),
                 [
-                    "PGD on a grey image with a tanh re-parameterisation that keeps pixels in [0, 1].",
-                    "Loss = sum of token-level cross-entropy across N white-box VLMs and 60 benign prompts.",
-                    "Output: ONE \"universal\" adversarial image that nudges every surrogate VLM toward the target phrase, regardless of the question asked.",
-                    "Cost: ~7 min (2-VLM ensemble) – ~19 min (4-VLM ensemble) on one H200.",
-                ], size=13)
+                    "Image reparameterisation x = 0.5 + γ·tanh(z₁) — pixels stay in [0,1] without a projection step.",
+                    "Masked cross-entropy loss summed across N white-box VLMs (multi-model ensemble) and 60 benign prompts (multi-prompt training).",
+                    "\"Universal\" = prompt-universal: ONE image drives the target phrase regardless of question phrasing.",
+                    "Quantization-noise robustness ON; multi-answer attack / localisation crops / Gaussian-blur turned OFF in our config.",
+                    "Cost: ~7 min (2-VLM) — ~19 min (4-VLM ensemble) on one H200.",
+                ], size=12)
 
     # Right: equations card
     rx = Inches(8.0)
@@ -550,18 +552,20 @@ def slide_4_paper1():
 def slide_5_paper2():
     slide = blank_slide()
     section_label(slide, "Theory  •  Building block 2")
-    slide_header(slide, "Paper 2 — AnyAttack Fusion",
-                 "Zhang et al., CVPR 2025  •  pretrained weights coco_bi.pt", page=5)
+    slide_header(slide, "Paper 2 — AnyAttack",
+                 "Zhang et al., CVPR 2025  •  Self-Supervised Generation of Targeted Adversarial Examples for VLMs",
+                 page=5)
 
     # Left: idea
     add_text(slide, MARGIN, Inches(1.85), Inches(7.0), Inches(0.4),
              "What it gives us", size=14, color=NAVY, bold=True)
     add_bullets(slide, MARGIN, Inches(2.3), Inches(7.0), Inches(3.6),
                 [
-                    "A frozen CLIP ViT-B/16 encodes any image into a 768-dim feature.",
-                    "A pretrained Decoder maps this feature to an ε-bounded noise tensor of the same spatial size as a target clean photo.",
-                    "We REUSE the public weights — no retraining — so the attack is reproducible from a few-line public recipe.",
-                    "Adding the noise to a clean image preserves PSNR ≈ 25.2 dB and L∞ = 16/255.",
+                    "Foundation-model approach to adversarial perturbation: encoder-decoder pretrained ONCE, reused everywhere.",
+                    "Frozen CLIP ViT-B/16 encoder → 768-dim feature → learned Decoder → ε-bounded noise tensor δ.",
+                    "Decoder is SELF-SUPERVISED-pretrained on bidirectional COCO pairs (coco_bi.pt); no task-specific labels.",
+                    "We reuse the public weights as-is — Stage 2 is essentially free per new clean photo.",
+                    "Result: PSNR ≈ 25.2 dB, L∞ = 16/255 on every fused image.",
                 ], size=13)
 
     # Right card: pipeline
@@ -611,18 +615,18 @@ def slide_6_composition():
     h = Inches(4.5)
 
     cols = [
-        ("Paper 1 alone", RED,
-         "✓ produces a powerful adversarial image",
+        ("UAA alone (Paper 1)", RED,
+         "✓ produces a prompt-universal adversarial image with a baked-in target phrase",
          "✗ image is artificial — anyone uploading it would be flagged",
          "✗ does not transfer to a natural-photo input pipeline"),
-        ("Paper 2 alone", AMBER,
-         "✓ general-purpose adversarial noise, applies to any photo",
-         "✗ no built-in semantic target — random output drift",
+        ("AnyAttack alone (Paper 2)", AMBER,
+         "✓ ε-bounded noise can be added to any clean photo (PSNR ≈ 25 dB)",
+         "✗ no built-in target phrase — only causes generic output drift",
          "✗ untargeted = useful for evasion, useless for prompt injection"),
-        ("VisInject (our pipeline)", GREEN,
-         "✓ Stage 1's universal image carries the semantic target",
-         "✓ Stage 2 transports it onto a real-looking photo",
-         "✓ Stage 3 measures whether the payload survived the pipeline"),
+        ("VisInject = UAA ⊕ AnyAttack", GREEN,
+         "✓ UAA's universal image $x_u$ carries the semantic target",
+         "✓ AnyAttack's pretrained encoder-decoder transports $x_u$ onto a real photo",
+         "✓ our dual-dim Stage 3 measures whether the payload actually survives"),
     ]
     for i, (title, accent, *lines) in enumerate(cols):
         x = MARGIN + i * (col_w + Inches(0.3))
