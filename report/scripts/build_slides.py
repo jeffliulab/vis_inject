@@ -56,6 +56,24 @@ SLIDE_W, SLIDE_H = prs.slide_width, prs.slide_height
 MARGIN = Inches(0.6)
 
 
+# python-pptx's bundled default template ships with a slide master that
+# includes decorative shapes (subtle diagonal accents on some renderers).
+# Strip them so every slide truly starts from a blank canvas — and strip the
+# placeholders on every layout for the same reason.
+def _strip_master_decorations() -> None:
+    for master in prs.slide_masters:
+        for shape in list(master.shapes):
+            sp = shape._element
+            sp.getparent().remove(sp)
+        for layout in master.slide_layouts:
+            for shape in list(layout.shapes):
+                sp = shape._element
+                sp.getparent().remove(sp)
+
+
+_strip_master_decorations()
+
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -64,6 +82,14 @@ def blank_slide():
     bg = slide.background.fill
     bg.solid()
     bg.fore_color.rgb = WHITE
+    # Defensive: paint a white rectangle covering the whole slide before any
+    # content goes on top, so even if a renderer falls back to the master we
+    # still see plain white underneath.
+    cover = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, SLIDE_W, SLIDE_H)
+    cover.fill.solid()
+    cover.fill.fore_color.rgb = WHITE
+    cover.line.fill.background()
+    cover.shadow.inherit = False
     return slide
 
 
