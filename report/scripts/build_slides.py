@@ -163,7 +163,8 @@ def add_rect(slide, left, top, width, height, *, fill=CARD, line=None, radius=No
 
 
 def add_line(slide, x1, y1, x2, y2, color=RULE, weight=0.6):
-    line = slide.shapes.add_connector(1, x1, y1, x2 - x1, y2 - y1)
+    # python-pptx's add_connector takes absolute end coordinates, NOT deltas.
+    line = slide.shapes.add_connector(1, x1, y1, x2, y2)
     line.line.color.rgb = color
     line.line.width = Pt(weight)
     return line
