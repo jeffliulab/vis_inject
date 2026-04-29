@@ -1048,36 +1048,38 @@ SCREENSHOT_QUESTIONS_PREVIEW = [
 def slide_12_benign_questions():
     slide = blank_slide()
     section_label(slide, "Experiment Design")
-    slide_header(slide, "Benign Questions",
-                 "60-question pool covering three real-world VLM-usage modes; "
-                 "the same pool feeds Stage 1 training and Stage 3 evaluation.",
+    slide_header(slide, "Benign Questions — One Pool, Two Roles",
+                 "Same 60-question pool drives Stage 1 training AND Stage 3 evaluation.",
                  page=12)
 
-    # Three columns, one per category.  Each column shows: header strip,
-    # 8 example questions (top of category list).  Footer note explains usage.
+    # Three columns, one per category.  Categories map back to the three
+    # attack scenarios on slide 4.
     cats = [
-        ("USER",      "what a human would type",       USER_QUESTIONS_PREVIEW,      NAVY),
-        ("AGENT",     "how an LLM agent prompts a VLM", AGENT_QUESTIONS_PREVIEW,    ACCENT),
-        ("SCREENSHOT","screenshot/capture-tool prompts", SCREENSHOT_QUESTIONS_PREVIEW, GREEN),
+        ("USER",       "→ slide 4 scenario:\nhosted-assistant upload",
+         USER_QUESTIONS_PREVIEW,      NAVY),
+        ("AGENT",      "→ slide 4 scenario:\nLLM agent screenshots",
+         AGENT_QUESTIONS_PREVIEW,     ACCENT),
+        ("SCREENSHOT", "→ slide 4 scenario:\nMCP / capture-tool replay",
+         SCREENSHOT_QUESTIONS_PREVIEW, GREEN),
     ]
     col_w = (SLIDE_W - 2 * MARGIN - Inches(0.6)) / 3
     top = Inches(1.85)
-    h = Inches(4.6)
+    h = Inches(3.7)
 
-    n_show = 8  # number of example questions to display per column
+    n_show = 6  # 6 examples per column to leave room for the bottom block
     for i, (head, sub, qs, accent) in enumerate(cats):
         x = MARGIN + i * (col_w + Inches(0.3))
         add_rect(slide, x, top, col_w, h, fill=CARD, radius=0.04)
-        add_rect(slide, x, top, col_w, Inches(0.6), fill=accent, radius=0.04)
-        add_text(slide, x + Inches(0.25), top + Inches(0.10),
+        add_rect(slide, x, top, col_w, Inches(0.7), fill=accent, radius=0.04)
+        add_text(slide, x + Inches(0.25), top + Inches(0.08),
                  col_w - Inches(0.5), Inches(0.3),
                  f"{head}  ·  20 questions", size=13, color=WHITE, bold=True)
         add_text(slide, x + Inches(0.25), top + Inches(0.36),
-                 col_w - Inches(0.5), Inches(0.25),
-                 sub, size=10, color=WHITE, italic=True)
+                 col_w - Inches(0.5), Inches(0.32),
+                 sub, size=9, color=WHITE, italic=True, line_spacing=1.1)
         # Numbered list of first n_show questions
         for j, q in enumerate(qs[:n_show]):
-            qy = top + Inches(0.75 + j * 0.45)
+            qy = top + Inches(0.85 + j * 0.40)
             add_text(slide, x + Inches(0.25), qy,
                      Inches(0.30), Inches(0.4),
                      f"{j+1}.", size=10, color=accent, bold=True)
@@ -1085,25 +1087,49 @@ def slide_12_benign_questions():
                      col_w - Inches(0.7), Inches(0.4),
                      q, size=10, color=INK, line_spacing=1.15)
         # "+ N more" footer
-        add_text(slide, x + Inches(0.25), top + h - Inches(0.4),
+        add_text(slide, x + Inches(0.25), top + h - Inches(0.35),
                  col_w - Inches(0.5), Inches(0.3),
-                 f"... + {len(qs) - n_show} more (full list in PDF appendix)",
+                 f"... + {len(qs) - n_show} more  (full list in PDF appendix)",
                  size=10, color=SUBINK, italic=True)
 
-    # Bottom usage note
+    # Bottom: TWO ROLES side by side
     foot_y = top + h + Inches(0.2)
-    add_rect(slide, MARGIN, foot_y, SLIDE_W - 2 * MARGIN, Inches(0.95),
-             fill=CARD, radius=0.04)
-    add_text(slide, MARGIN + Inches(0.25), foot_y + Inches(0.12),
-             SLIDE_W - 2 * MARGIN - Inches(0.5), Inches(0.3),
-             "How the pool is used", size=12, color=NAVY, bold=True)
-    add_text(slide, MARGIN + Inches(0.25), foot_y + Inches(0.42),
-             SLIDE_W - 2 * MARGIN - Inches(0.5), Inches(0.5),
-             "Stage 1 (training): random sample one question per PGD step from "
-             "all 60 — universal images stay robust across question phrasings.   "
-             "Stage 3 (evaluation): first 5 of each category → 15 questions per "
-             "(image, target VLM)  →  6 615 response pairs total.",
-             size=11, color=SUBINK, line_spacing=1.2)
+    foot_h = Inches(1.65)
+    half_w = (SLIDE_W - 2 * MARGIN - Inches(0.3)) / 2
+
+    # Stage 1 role
+    add_rect(slide, MARGIN, foot_y, half_w, foot_h, fill=CARD, radius=0.04)
+    add_rect(slide, MARGIN, foot_y, Inches(0.06), foot_h, fill=NAVY)
+    add_text(slide, MARGIN + Inches(0.20), foot_y + Inches(0.10),
+             half_w - Inches(0.3), Inches(0.3),
+             "Role 1 — Stage 1 training  (data augmentation)",
+             size=12, color=NAVY, bold=True)
+    add_text(slide, MARGIN + Inches(0.20), foot_y + Inches(0.42),
+             half_w - Inches(0.3), foot_h - Inches(0.55),
+             "At each of the 2 000 PGD steps we sample ONE question at "
+             "random from all 60.  The universal image therefore has to "
+             "drive the target phrase regardless of how the user phrases "
+             "their question — without this, the attack would fail the "
+             "moment the user said \"what is this?\" instead of \"describe \"\n"
+             "this image\".",
+             size=10, color=SUBINK, line_spacing=1.2)
+
+    # Stage 3 role
+    rx2 = MARGIN + half_w + Inches(0.3)
+    add_rect(slide, rx2, foot_y, half_w, foot_h, fill=CARD, radius=0.04)
+    add_rect(slide, rx2, foot_y, Inches(0.06), foot_h, fill=GREEN)
+    add_text(slide, rx2 + Inches(0.20), foot_y + Inches(0.10),
+             half_w - Inches(0.3), Inches(0.3),
+             "Role 2 — Stage 3 evaluation  (test set)",
+             size=12, color=GREEN, bold=True)
+    add_text(slide, rx2 + Inches(0.20), foot_y + Inches(0.42),
+             half_w - Inches(0.3), foot_h - Inches(0.55),
+             "We take the FIRST 5 questions of each category = 15 per "
+             "(image, target VLM).  Smaller than 60 because each eval "
+             "pair triggers a full ~150-token VLM generation — at 6 615 "
+             "pairs the cost adds up.   15 keeps coverage of all three "
+             "scenarios while staying tractable on a laptop.",
+             size=10, color=SUBINK, line_spacing=1.2)
 
     slide_footer(slide)
 

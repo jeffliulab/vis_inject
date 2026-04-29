@@ -11,11 +11,11 @@ The full sweep is built out of four orthogonal axes:
   \item \textbf{$7$ target phrases} (\S\ref{sec:exp-prompts})
   \item \textbf{$3$ white-box ensembles} (\S\ref{sec:exp-vlms})
   \item \textbf{$7$ test images} (\S\ref{sec:exp-images})
-  \item \textbf{$60$ benign-question pool} (20 each in ``user'', ``agent'', ``screenshot'' categories; full list in Appendix~\ref{app:questions})
+  \item \textbf{$60$ benign-question pool} (20 each in USER / AGENT / SCREENSHOT categories that mirror the three threat-model scenarios in \S\ref{sec:threat}; full list in Appendix~\ref{app:questions})
   \item \textbf{$15$ questions per (image, target VLM)} for evaluation: the first 5 of each category
 \end{itemize}
 
-Stage~1 produces $7 \times 3 = 21$ universal adversarial images, with each PGD step sampling one question at random from the full 60-question pool so the universal stays robust across phrasings. Stage~2 fuses each universal onto each of the $7$ test images, giving $147$ adversarial photos. For each adversarial photo we run $15$ evaluation questions on every \emph{applicable} target \vlm{} (BLIP-2 only contributes pairs in ensembles where it appears, etc.), giving $6{,}615$ (clean, adversarial) response pairs total. Table~\ref{tab:matrix} summarises the multiplicative structure.
+The 60-question pool plays two roles. In \emph{Stage 1 training} it acts as a data-augmentation source: each PGD step samples one question uniformly at random from all 60, so the universal image is forced to drive the target phrase regardless of how the prompt is phrased --- without this, an attack tuned on ``Describe this image'' would silently fail when the user types ``What is this?''. In \emph{Stage 3 evaluation} it acts as a fixed test slice: the first $5$ of each category $= 15$ deterministic questions per (image, target \vlm{}) cover all three scenarios while keeping the $6{,}615$-pair sweep tractable on a CPU judge. Stage~1 produces $7 \times 3 = 21$ universal adversarial images, Stage~2 fuses each onto each of the $7$ test images for $147$ adversarial photos, and Stage~3 runs the $15$ evaluation questions on every applicable target \vlm{} (BLIP-2 only contributes pairs in ensembles where it appears, etc.). Table~\ref{tab:matrix} summarises the multiplicative structure.
 
 \begin{table}[h]
   \centering
