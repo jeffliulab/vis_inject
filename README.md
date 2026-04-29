@@ -6,7 +6,7 @@
 
 [![Version](https://img.shields.io/badge/version-v1.1-blue?style=flat-square)]() [![Python](https://img.shields.io/badge/python-3.10+-green?style=flat-square)]() [![License: Research](https://img.shields.io/badge/license-Research%20Only-red?style=flat-square)]()
 
-[Demo](https://huggingface.co/spaces/jeffliulab/visinject) | [Dataset](https://huggingface.co/datasets/jeffliulab/visinject) | [Experiment Report](docs/experiment_report.md) | [Final PDF](report/pdf/main.pdf)
+[![🤗 Space](https://img.shields.io/badge/%F0%9F%A4%97-Space-FFD21E?style=flat-square&labelColor=000000)](https://huggingface.co/spaces/jeffliulab/visinject) [![🤗 Dataset](https://img.shields.io/badge/%F0%9F%A4%97-Dataset-FFD21E?style=flat-square&labelColor=000000)](https://huggingface.co/datasets/jeffliulab/visinject)
 
 ---
 
@@ -18,16 +18,6 @@
 - **10 confirmed injection cases** with side-by-side clean vs adversarial comparison
 - **Transfer test**: attack does NOT transfer to GPT-4o — large models perceive adversarial noise as image corruption
 - **BLIP-2 is fully immune**: Q-Former architecture filters out adversarial perturbation (0% affected)
-
----
-
-## Final Report & Slides
-
-Course-final-project deliverables live in [`report/`](report/), kept separate from the project source and the technical docs:
-
-- **PDF report** (10 pages, English, native LaTeX): [`report/pdf/main.pdf`](report/pdf/main.pdf) — committed.
-- **Slide deck** (14 slides, English, 16:9): build locally with `python report/scripts/build_slides.py` → `report/slides/VisInject_final.pptx`.
-- See [`report/README.md`](report/README.md) for build prerequisites and conventions.
 
 ---
 
@@ -265,9 +255,6 @@ python demo/space_demo/app.py
 | [docs/RESULTS_SCHEMA.md](docs/RESULTS_SCHEMA.md) | JSON output field definitions |
 | [docs/HPC_GUIDE.md](docs/HPC_GUIDE.md) | Tufts HPC SLURM workflow |
 | [evaluate/README.md](evaluate/README.md) | Stage 3 evaluation package |
-| [Experiment Report](docs/experiment_report.md) | Full experiment report (Chinese, primary narrative) |
-| [Final Report PDF](report/pdf/main.pdf) | Course-project final report (English, LaTeX) |
-| [report/README.md](report/README.md) | How to build the slide deck and PDF |
 | [CLAUDE.md](CLAUDE.md) | Agent guide for this project |
 
 ---
