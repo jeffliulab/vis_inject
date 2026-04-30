@@ -6,7 +6,7 @@ Three files, one folder.
 |---|---|
 | `VisInject_Final_Report.pdf` | Written report, 18 pages, native LaTeX. |
 | `VisInject_Slides.pptx`      | Presentation deck, 25 slides, 16:9 widescreen. |
-| `VisInject_Code.zip`         | Snapshot of the project source code at submission time (excludes this `report/submission/` folder, model weights, and HuggingFace cache to keep the archive lean). |
+| `VisInject_Code.zip`         | Core source code at submission time. Keeps `src/`, `attack/`, `models/`, `evaluate/`, `scripts/`, `demo/`, `data/`, `outputs/` (curated case studies only — model weights and the HuggingFace cache are excluded by `.gitignore`), plus `README.md`, `LICENSE`, `.gitignore`, and `.env.example`. The agent guide (`CLAUDE.md`), the technical-docs folder (`docs/`), the Chinese README, and the report subtree itself are NOT included — they are workflow artefacts, not part of the code deliverable. |
 
 ## Project links
 
