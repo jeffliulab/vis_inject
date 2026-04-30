@@ -62,6 +62,13 @@ dist/
 build/
 *.whl
 
+# ---- Report subtree ----
+# The PPT / LaTeX / submission folder lived under report/ during course-final
+# preparation.  The deliverables are frozen at the v1.1 tag.  Going forward
+# we untrack the subtree so build artefacts (LaTeX aux, math PNG cache,
+# unpacked code zip, the .venv, etc.) don't pollute git status.
+report/
+
 # ---- Misc ----
 .ipynb_checkpoints/
 *.tmp
