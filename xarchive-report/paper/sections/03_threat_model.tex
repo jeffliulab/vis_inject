@@ -1,8 +1,0 @@
-\section{Threat Model}
-\label{sec:threat}
-
-A user uploads an image to a multimodal assistant and asks a benign question (e.g.\ ``describe this image'' or ``extract all text from this screenshot''). The attacker controls only the image pixels; the user prompt, the system prompt, and the model weights are off-limits. The attacker picks one short \emph{target phrase} (a URL, a payment-information request, a piece of misinformation, etc.) before the attack begins, and succeeds if that phrase --- or its semantic class --- appears in the assistant's reply.
-
-We grant the attacker white-box access to a small ensemble of two to four open \vlm{}s used as \emph{surrogates} during optimisation. They never query the deployed model, so transferability is something we measure separately. Two perceptual constraints make the attack realistic rather than merely possible: the noise budget is $\Linf \leq 16/255$ (PSNR $\approx 25.2$~dB on every test image we use), and the user does not collaborate. The reply is judged against the clean baseline answer to the same prompt on the same image (with the noise removed).
-
-This setting is not hypothetical. Three operational scenarios motivate the work: hosted-assistant uploads where any URL or address in the reply becomes a clickable target inside a trusted UI; LLM agents that read live-page screenshots, where a poisoned banner can steer what the agent does next; and tool-replay channels (MCP, OCR, retrieval), where a persistent adversarial image can re-inject a payload across many turns. The common thread is that the model treats user-supplied imagery as ground truth.
