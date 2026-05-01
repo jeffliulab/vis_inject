@@ -69,6 +69,10 @@ build/
 # unpacked code zip, the .venv, etc.) don't pollute git status.
 report/
 
+# ---- AI-agent workflow files (kept local, not on GitHub) ----
+CLAUDE.md
+.claude/
+
 # ---- Misc ----
 .ipynb_checkpoints/
 *.tmp
