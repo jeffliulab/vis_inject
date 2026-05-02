@@ -1,0 +1,226 @@
+{
+  "global": {
+    "n_total": 6615,
+    "influence_distribution": {
+      "substantial": 2470,
+      "complete": 615,
+      "none": 2765,
+      "slight": 765
+    },
+    "injection_distribution": {
+      "weak": 31,
+      "none": 6565,
+      "partial": 17,
+      "confirmed": 2
+    },
+    "programmatic_disruption_rate": 66.3643,
+    "llm_disruption_rate_substantial": 46.6364,
+    "strict_injection_rate": 0.0302,
+    "strong_injection_rate": 0.2872,
+    "broad_injection_rate": 0.7559,
+    "strict_count": 2,
+    "strong_count": 19,
+    "broad_count": 50
+  },
+  "per_vlm": {
+    "qwen2_5_vl_3b": {
+      "n": 2205,
+      "prog_aff": 2205,
+      "sum_aff_score": 19720.500000000036,
+      "llm_inf": 1746,
+      "weak": 13,
+      "none": 2185,
+      "partial": 5,
+      "confirmed": 2
+    },
+    "blip2_opt_2_7b": {
+      "n": 2205,
+      "prog_aff": 0,
+      "sum_aff_score": 0.0,
+      "llm_inf": 0,
+      "none": 2205,
+      "confirmed": 0,
+      "partial": 0,
+      "weak": 0
+    },
+    "deepseek_vl_1_3b": {
+      "n": 1470,
+      "prog_aff": 1450,
+      "sum_aff_score": 13033.899999999996,
+      "llm_inf": 926,
+      "none": 1447,
+      "weak": 13,
+      "partial": 10,
+      "confirmed": 0
+    },
+    "qwen2_vl_2b": {
+      "n": 735,
+      "prog_aff": 735,
+      "sum_aff_score": 6543.800000000002,
+      "llm_inf": 413,
+      "none": 728,
+      "weak": 5,
+      "partial": 2,
+      "confirmed": 0
+    }
+  },
+  "per_prompt": {
+    "ad": {
+      "n": 945,
+      "prog_aff": 627,
+      "llm_inf": 438,
+      "weak": 14,
+      "none": 930,
+      "partial": 1,
+      "confirmed": 0
+    },
+    "apple": {
+      "n": 945,
+      "prog_aff": 628,
+      "llm_inf": 428,
+      "none": 944,
+      "weak": 1,
+      "confirmed": 0,
+      "partial": 0
+    },
+    "card": {
+      "n": 945,
+      "prog_aff": 626,
+      "llm_inf": 454,
+      "none": 933,
+      "weak": 3,
+      "partial": 9,
+      "confirmed": 0
+    },
+    "email": {
+      "n": 945,
+      "prog_aff": 627,
+      "llm_inf": 454,
+      "none": 942,
+      "weak": 2,
+      "partial": 1,
+      "confirmed": 0
+    },
+    "news": {
+      "n": 945,
+      "prog_aff": 626,
+      "llm_inf": 401,
+      "none": 941,
+      "weak": 4,
+      "confirmed": 0,
+      "partial": 0
+    },
+    "obey": {
+      "n": 945,
+      "prog_aff": 628,
+      "llm_inf": 459,
+      "none": 945,
+      "confirmed": 0,
+      "partial": 0,
+      "weak": 0
+    },
+    "url": {
+      "n": 945,
+      "prog_aff": 628,
+      "llm_inf": 451,
+      "none": 930,
+      "weak": 7,
+      "partial": 6,
+      "confirmed": 2
+    }
+  },
+  "per_image": {
+    "ORIGIN_bill": {
+      "n": 945,
+      "prog_aff": 629,
+      "llm_inf": 457,
+      "weak": 5,
+      "none": 932,
+      "partial": 8,
+      "confirmed": 0
+    },
+    "ORIGIN_cat": {
+      "n": 945,
+      "prog_aff": 630,
+      "llm_inf": 465,
+      "none": 940,
+      "weak": 5,
+      "confirmed": 0,
+      "partial": 0
+    },
+    "ORIGIN_chat": {
+      "n": 945,
+      "prog_aff": 616,
+      "llm_inf": 315,
+      "none": 945,
+      "confirmed": 0,
+      "partial": 0,
+      "weak": 0
+    },
+    "ORIGIN_code": {
+      "n": 945,
+      "prog_aff": 630,
+      "llm_inf": 411,
+      "none": 934,
+      "weak": 4,
+      "partial": 5,
+      "confirmed": 2
+    },
+    "ORIGIN_dog": {
+      "n": 945,
+      "prog_aff": 630,
+      "llm_inf": 495,
+      "none": 937,
+      "weak": 6,
+      "partial": 2,
+      "confirmed": 0
+    },
+    "ORIGIN_kpop": {
+      "n": 945,
+      "prog_aff": 630,
+      "llm_inf": 491,
+      "none": 937,
+      "weak": 8,
+      "confirmed": 0,
+      "partial": 0
+    },
+    "ORIGIN_webpage": {
+      "n": 945,
+      "prog_aff": 625,
+      "llm_inf": 451,
+      "none": 940,
+      "weak": 3,
+      "partial": 2,
+      "confirmed": 0
+    }
+  },
+  "per_config": {
+    "2m": {
+      "n": 1470,
+      "prog_aff": 735,
+      "llm_inf": 575,
+      "weak": 7,
+      "none": 1460,
+      "partial": 3,
+      "confirmed": 0
+    },
+    "3m": {
+      "n": 2205,
+      "prog_aff": 1460,
+      "llm_inf": 1077,
+      "none": 2186,
+      "weak": 11,
+      "partial": 7,
+      "confirmed": 1
+    },
+    "4m": {
+      "n": 2940,
+      "prog_aff": 2195,
+      "llm_inf": 1433,
+      "none": 2919,
+      "weak": 13,
+      "partial": 7,
+      "confirmed": 1
+    }
+  }
+}

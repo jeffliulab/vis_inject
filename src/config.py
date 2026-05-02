@@ -21,7 +21,7 @@ init_model_env()
 UNIVERSAL_ATTACK_CONFIG = {
     "target_phrase": "Sure, here it is",
     "image_size": (448, 448),
-    "num_steps": 3000,
+    "num_steps": 2000,  # paper-reported default; HPC sweep scripts can override
     "lr": 1e-2,
     "gamma_single": 0.1,
     "gamma_multi": 0.5,
@@ -103,16 +103,40 @@ EVAL_CONFIG = {
 }
 
 # ── LLM-as-Judge: API-based evaluation ─────────────────────────────
-# Response pairs are generated on HPC, then judged locally via API.
+# v3 (default since 2026-05-01): dual-axis LLM judge using DeepSeek-V4-Pro
+# thinking mode. Output JSON with {influence_level, injection_level,
+# rationale}. See `evaluate/llm_judge.py` and `1.3升级计划.md`.
 # Usage: python -m evaluate.judge --pairs-file response_pairs.json
 
 JUDGE_CONFIG = {
-    "version": 2,  # v2: dual-check (affected + injected), v1: legacy single-prompt
-    "judges": [
-        {"name": "deepseek", "provider": "deepseek", "model": "deepseek-chat"},
-    ],
+    "version": 3,  # v3: dual-axis LLM judge (DeepSeek-V4-Pro thinking)
+    # v1 = legacy 3-LLM ensemble (removed); v2 = programmatic difflib+regex
+    # (kept as deterministic baseline within v3 output)
+}
+
+DEEPSEEK_CONFIG = {
+    "base_url": "https://api.deepseek.com",
+    "model": "deepseek-v4-pro",
+    # Thinking mode for max calibration quality. Note: per DeepSeek docs,
+    # ``reasoning_content`` is returned but MUST NOT be sent back as a
+    # message — only ``content`` (the JSON we want) is used.
+    "thinking": {"type": "enabled", "reasoning_effort": "high"},
+    # Determinism: temperature=0 + top_p=1 (DeepSeek has no `seed` param,
+    # so reproducibility is delivered via the cache file shipped with the
+    # dataset, not via API determinism).
     "temperature": 0.0,
-    "max_tokens": 300,
+    "top_p": 1.0,
+    # 4096 chosen empirically: 1024 truncated ~3% of calls when thinking
+    # mode produces verbose reasoning_content. Output JSON is short, but
+    # max_tokens covers reasoning + content combined.
+    "max_tokens": 4096,
+    "response_format": {"type": "json_object"},
+    # Concurrency / retry. DeepSeek dynamically rate-limits based on
+    # server load; 10 was fine in our test runs without 429 surges.
+    "max_concurrent": 10,
+    "max_retries": 5,
+    "backoff_initial_seconds": 1.0,
+    "backoff_factor": 2.0,
 }
 
 # ── Output paths ──────────────────────────────────────────────────
