@@ -6,7 +6,7 @@
 
 [![Version](https://img.shields.io/badge/version-v1.5-blue?style=flat-square)]() [![Python](https://img.shields.io/badge/python-3.10+-green?style=flat-square)]() [![License: Research](https://img.shields.io/badge/license-Research%20Only-red?style=flat-square)]()
 
-[![🤗 Space](https://img.shields.io/badge/%F0%9F%A4%97-Space-FFD21E?style=flat-square&labelColor=000000)](https://huggingface.co/spaces/jeffliulab/visinject) [![🤗 Dataset](https://img.shields.io/badge/%F0%9F%A4%97-Dataset-FFD21E?style=flat-square&labelColor=000000)](https://huggingface.co/datasets/jeffliulab/visinject)
+[![arXiv](https://img.shields.io/badge/arXiv-2605.01449-b31b1b?style=flat-square)](https://arxiv.org/abs/2605.01449) [![🤗 Space](https://img.shields.io/badge/%F0%9F%A4%97-Space-FFD21E?style=flat-square&labelColor=000000)](https://huggingface.co/spaces/jeffliulab/visinject) [![🤗 Dataset](https://img.shields.io/badge/%F0%9F%A4%97-Dataset-FFD21E?style=flat-square&labelColor=000000)](https://huggingface.co/datasets/jeffliulab/visinject)
 
 ---
 
@@ -276,6 +276,7 @@ python demo/space_demo/app.py
 
 ## 参考文献
 
+- **VisInject（本项目）**: "VisInject: Adversarial Prompt Injection for Vision-Language Models", [arXiv:2605.01449](https://arxiv.org/abs/2605.01449).
 - **UniversalAttack**: Rahmatullaev et al., "Universal Adversarial Attack on Aligned Multimodal LLMs", arXiv:2502.07987, 2025.
 - **AnyAttack**: Zhang et al., "AnyAttack: Towards Large-scale Self-supervised Adversarial Attacks on Vision-language Models", CVPR 2025.
 
